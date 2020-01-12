@@ -1,0 +1,88 @@
+---
+title: "Inital-Data-Exploration"
+author: "Brychan Manry"
+date: "January 12, 2020"
+knit: (function(input_file, encoding) {
+  out_dir <- 'docs';
+  rmarkdown::render(input_file,
+ encoding=encoding,
+ output_file=file.path(dirname(input_file), out_dir, 'index.html'))})
+output: html_document
+---
+
+Since this is my first time using the openFDA API, it is important that I first explore: 1) how data is accessed; 2) what data is available; and 3) potental limitations and biases inherent to the data.
+
+
+# Overwview of openFDA Adverse Events Reporting Data
+
+### Where does it come from?
+
+### What information do the reports contain?
+
+### Limitations
+* Know issues with spelling / data entry
+* Harmonization
+* missing values
+* Duplicate reports
+
+# Accessing openFDA Adverse Event Reports
+* *TODO: Overview of how data can be accessed API vs Download*
+* Why API use for this case and the potential for a processing pipeline to download quarterly extracts w/ processing - Cleaning names using dist or NPL
+
+
+### Accessing Data Via API
+
+
+Note: There are R libraries available on github which help streamline the openFDA API request process, however in an effort to gain a better understanding of the API syntax, and to maximize the ease of rerunning this case study without the need for uncommon R libraries, I've decided use a minimum number of R libraries limited only yo common packages which are typically presnent in most R enviroments **ADD LINK TO PACKAGE DEPENDENCIES**.
+
+If part of these analysis were to be transistioned into a more robust product it would be prudent to use an exisiting library like **ADD LINK TO rOpenHealth/openfda**, or develop a custom package, which standardizes processes used when interacting with the openFDA API. These functions would allow for greater fexability and a more dynamic way to interact with the openFDA data.
+
+### API Limitations
+Requests are limited per day per IP address: without API key (1000 requests); with key 120000 requests per day
+Report requests are limited to 100 reports per request
+Count requests are limitd to 1000 values per request
+
+For this analysis queries will be limited to count summaries available directly from the openFDA API and subsets of reports combined from specific drugs and/or 
+
+### Downloading Full Data Extracts
+* Create fuction for downloading and processing whole quarters (or just multiple data sets)
+* Note that it is possible to sync with S3 bucket (might be easiest way to maintain production copy)
+
+
+
+# High-Level Data Exploration
+* Top reported events (by SAE classification)
+* Reporting countries
+* Reporting country 
+* Reporter Type e.g., Dr. vs Patient (by SAE classification or other cuts)
+* Timeseries?
+* Missingness
+
+
+# Individual Drug or Adverse Event Inital Exploration
+* Top reported events (by SAE classification)
+* Reporting countries
+* Reporting country 
+* Reporter Type e.g., Dr. vs Patient (by SAE classification or other cuts)
+* Timeseries?
+* Missingness
+
+
+# Sources
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
