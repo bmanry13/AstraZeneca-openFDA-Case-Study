@@ -1,0 +1,213 @@
+{
+  "meta": {
+    "disclaimer": "Do not rely on openFDA to make decisions regarding medical care. While we make every effort to ensure that data is accurate, you should assume all results are unvalidated. We may limit or otherwise restrict your access to the API in line with our Terms of Service.",
+    "terms": "https://open.fda.gov/terms/",
+    "license": "https://open.fda.gov/license/",
+    "last_updated": "2019-12-14",
+    "results": {
+      "skip": 0,
+      "limit": 1,
+      "total": 768
+    }
+  },
+  "results": [
+    {
+      "reporttype": "1",
+      "safetyreportversion": "1",
+      "receivedateformat": "102",
+      "primarysource": {
+        "qualification": "5",
+        "reportercountry": "IT"
+      },
+      "transmissiondateformat": "102",
+      "fulfillexpeditecriteria": "1",
+      "safetyreportid": "10012915",
+      "patient": {
+        "patientonsetage": "67",
+        "reaction": [
+          {
+            "reactionoutcome": "2",
+            "reactionmeddraversionpt": "17.0",
+            "reactionmeddrapt": "Pulmonary oedema"
+          },
+          {
+            "reactionoutcome": "2",
+            "reactionmeddraversionpt": "17.0",
+            "reactionmeddrapt": "Metabolic acidosis"
+          },
+          {
+            "reactionoutcome": "2",
+            "reactionmeddraversionpt": "17.0",
+            "reactionmeddrapt": "Vomiting"
+          }
+        ],
+        "patientonsetageunit": "801",
+        "patientweight": "80",
+        "patientsex": "1",
+        "drug": [
+          {
+            "drugstartdateformat": "102",
+            "drugindication": "TYPE 2 DIABETES MELLITUS",
+            "drugintervaldosageunitnumb": "1",
+            "drugbatchnumb": "UNCONFIRMED",
+            "drugadministrationroute": "048",
+            "drugdosageform": "Unk",
+            "drugstartdate": "20130123",
+            "drugenddateformat": "102",
+            "drugauthorizationnumb": "021574",
+            "drugenddate": "20130623",
+            "drugstructuredosageunit": "003",
+            "medicinalproduct": "METFORMIN (UNKNOWN)",
+            "drugcumulativedosageunit": "003",
+            "drugcharacterization": "1",
+            "drugcumulativedosagenumb": "304000",
+            "drugstructuredosagenumb": "2000",
+            "drugintervaldosagedefinition": "804",
+            "drugdosagetext": "2000 MG, DAILY",
+            "drugseparatedosagenumb": "1",
+            "actiondrug": "1"
+          },
+          {
+            "drugindication": "PRODUCT USED FOR UNKNOWN INDICATION",
+            "drugbatchnumb": "UNKNOWN",
+            "drugadministrationroute": "065",
+            "drugcharacterization": "2",
+            "drugdosagetext": "UNK",
+            "drugrecurreadministration": "3",
+            "openfda": {
+              "product_ndc": [
+                "69344-203",
+                "69344-204",
+                "59390-149",
+                "76519-1159",
+                "17478-892",
+                "65162-833",
+                "42211-203",
+                "0378-8750",
+                "42291-256",
+                "65162-911",
+                "42211-204"
+              ],
+              "package_ndc": [
+                "42211-203-23",
+                "42211-204-29",
+                "69344-204-29",
+                "42211-204-23",
+                "17478-892-25",
+                "69344-203-29",
+                "59390-149-02",
+                "65162-833-66",
+                "17478-892-10",
+                "76519-1159-0",
+                "42211-203-43",
+                "59390-149-05",
+                "65162-911-74",
+                "42211-203-29",
+                "42211-204-43",
+                "42291-256-11",
+                "0378-8750-06"
+              ],
+              "generic_name": [
+                "DICLOFENAC SODIUM",
+                "DICLOFENAC"
+              ],
+              "spl_set_id": [
+                "f64b68a5-d6d2-4e92-87e7-90af04c1f9db",
+                "5372866a-dab3-45c8-8c2a-755ca36c1791",
+                "585549fe-dca3-47cb-a454-7a3b42fa8443",
+                "dff10e66-a577-451d-ba75-1889458ca833",
+                "f83d5c03-8094-4216-8969-a1102da68f15",
+                "78873f83-cea9-44d4-8ad4-8cb9257e5c7f",
+                "ed1acb91-2339-9f27-70e9-1d4eefb3f522",
+                "d9e299df-ad21-4ebb-a7a4-287a4c337e90",
+                "5fd9467f-9138-f7c9-e053-2a91aa0a5ef0"
+              ],
+              "brand_name": [
+                "DICLOFENAC SODIUM",
+                "ZORVOLEX",
+                "DICLOFENAC"
+              ],
+              "manufacturer_name": [
+                "Amneal Pharmaceuticals LLC",
+                "Akorn, Inc.",
+                "Altaire Pharmaceuticals Inc.",
+                "AvKARE, Inc.",
+                "Mylan Pharmaceuticals Inc.",
+                "Egalet US Inc.",
+                "H. J. Harkins Company Inc.",
+                "Iroko Pharmaceuticals LLC"
+              ],
+              "unii": [
+                "144O8QL0L1",
+                "QTG126297Q"
+              ],
+              "rxcui": [
+                "1442128",
+                "1442130",
+                "857700",
+                "1442116",
+                "1442122",
+                "855633",
+                "854801"
+              ],
+              "spl_id": [
+                "5fd9467f-9139-f7c9-e053-2a91aa0a5ef0",
+                "585549fe-dca3-47cb-a454-7a3b42fa8443",
+                "6e6a751c-eba1-4af7-8cf3-ad6686f3a1ff",
+                "18b78455-7da0-43c7-b1ea-95a9d635db3e",
+                "73b05aef-df1b-4b6c-8409-021f697deae1",
+                "2c8e6412-5c93-4128-921d-d9207b98709c",
+                "ed6b3c09-4364-4f20-871b-d62b1ab69548",
+                "aaf3360f-c3f0-4f88-8c85-3838754180f2",
+                "70bf93bc-e923-f080-e053-2991aa0a21df"
+              ],
+              "substance_name": [
+                "DICLOFENAC SODIUM",
+                "DICLOFENAC"
+              ],
+              "product_type": [
+                "HUMAN PRESCRIPTION DRUG"
+              ],
+              "route": [
+                "TOPICAL",
+                "ORAL",
+                "OPHTHALMIC"
+              ],
+              "application_number": [
+                "ANDA206116",
+                "NDA204592",
+                "ANDA203383",
+                "ANDA077845",
+                "ANDA208077",
+                "ANDA204306"
+              ]
+            },
+            "medicinalproduct": "DICLOFENAC"
+          }
+        ]
+      },
+      "serious": "1",
+      "reportduplicate": {
+        "duplicatesource": "WATSON",
+        "duplicatenumb": "IT-WATSON-2014-04549"
+      },
+      "receiptdate": "20140314",
+      "receiptdateformat": "102",
+      "receiver": {
+        "receivertype": "6",
+        "receiverorganization": "FDA"
+      },
+      "companynumb": "IT-WATSON-2014-04549",
+      "occurcountry": "IT",
+      "duplicate": "1",
+      "sender": {
+        "senderorganization": "FDA-Public Use",
+        "sendertype": "2"
+      },
+      "receivedate": "20140314",
+      "seriousnesshospitalization": "1",
+      "transmissiondate": "20141002",
+      "primarysourcecountry": "IT"
+    }
+  ]
+}

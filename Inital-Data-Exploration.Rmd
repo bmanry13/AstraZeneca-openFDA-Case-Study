@@ -1,71 +1,118 @@
 ---
-title: "Inital-Data-Exploration"
-author: "Brychan Manry"
-date: "January 12, 2020"
-knit: (function(input_file, encoding) {
-  out_dir <- 'docs';
-  rmarkdown::render(input_file,
- encoding=encoding,
- output_file=file.path(dirname(input_file), out_dir, 'index.html'))})
-output: html_document
+title: "Inital Data Exploration"
 ---
 
-Since this is my first time using the openFDA API, it is important that I first explore: 1) how data is accessed; 2) what data is available; and 3) potental limitations and biases inherent to the data.
-
-
-# Overwview of openFDA Adverse Events Reporting Data
-
-### Where does it come from?
-
-### What information do the reports contain?
-
-### Limitations
-* Know issues with spelling / data entry
-* Harmonization
-* missing values
-* Duplicate reports
-
-# Accessing openFDA Adverse Event Reports
-* *TODO: Overview of how data can be accessed API vs Download*
-* Why API use for this case and the potential for a processing pipeline to download quarterly extracts w/ processing - Cleaning names using dist or NPL
-
-
-### Accessing Data Via API
-
-
-Note: There are R libraries available on github which help streamline the openFDA API request process, however in an effort to gain a better understanding of the API syntax, and to maximize the ease of rerunning this case study without the need for uncommon R libraries, I've decided use a minimum number of R libraries limited only yo common packages which are typically presnent in most R enviroments **ADD LINK TO PACKAGE DEPENDENCIES**.
-
-If part of these analysis were to be transistioned into a more robust product it would be prudent to use an exisiting library like **ADD LINK TO rOpenHealth/openfda**, or develop a custom package, which standardizes processes used when interacting with the openFDA API. These functions would allow for greater fexability and a more dynamic way to interact with the openFDA data.
-
-### API Limitations
-Requests are limited per day per IP address: without API key (1000 requests); with key 120000 requests per day
-Report requests are limited to 100 reports per request
-Count requests are limitd to 1000 values per request
-
-For this analysis queries will be limited to count summaries available directly from the openFDA API and subsets of reports combined from specific drugs and/or 
-
-### Downloading Full Data Extracts
-* Create fuction for downloading and processing whole quarters (or just multiple data sets)
-* Note that it is possible to sync with S3 bucket (might be easiest way to maintain production copy)
-
+```{r, echo=FALSE}
+source("./R/functions.R")
+```
 
 
 # High-Level Data Exploration
+
+**NOTE ABOUT USING COUNT RESPONSES EXACT VS. NOT, RELATED IMPLICATIONS, and an examples**
+
 * Top reported events (by SAE classification)
+
+```{r}
+qList = list(
+  "count" = "patient.reaction.reactionmeddrapt.exact", 
+  "limit" = 10)
+countPlot(getResults(qList), "Adverse Event Type", "Top-10 Reported Adverse Events FAERS")
+```
+
+* Reporter Type
+```{r}
+qList$count = "primarysource.qualification"
+countPlot(getResults(qList), "Reporter Type", "Report Counts by Reporter Type", mapCategories = "primarysource.qualification")
+```
+
 * Reporting countries
-* Reporting country 
-* Reporter Type e.g., Dr. vs Patient (by SAE classification or other cuts)
-* Timeseries?
-* Missingness
+```{r}
+qList$count = "occurcountry.exact"
+countPlot(getResults(qList), "Country", "Report Counts by Country of Occurance")
+```
+
+```{r}
+qList$count = "serious"
+mapCategoryValues(getResults(qList), qList$count)
+```
+
+### Exploring AE Reporting
+
+*Reporter Type*
+```{r}
+compareAE = function(count_group, mapCatValues = FALSE, limit = 10){
+  qList = list(count = count_group, limit = 1000)
+  count_table = getResults(qList)
+  # ADD SAE COUNTS
+  qList$search = "serious:1"
+  count_table = merge(count_table, getResults(qList), by = "term")
+  names(count_table)[2:3] = c("total_reports", "SAE")
+  count_table$SAE_PCT = count_table$SAE / count_table$total_reports
+  # ADD AE COUNTS
+  qList$search = "serious:2"
+  count_table = merge(count_table, getResults(qList), by = "term")
+  names(count_table)[5] = "AE"
+  count_table$AE_PCT = count_table$AE / count_table$total_reports
+  # JUST CONFIRMING THAT SAE AND AE REPORT COUNTS ARE MUTUALLY EXCLUSIVE
+  count_table$net_pct = count_table$AE_PCT + count_table$SAE_PCT
+  if(mapCatValues) count_table = mapCategoryValues(count_table, qList$count)
+  count_table = count_table[order(-count_table$total_reports), ]
+  
+  return(count_table[1:min(nrow(count_table), limit), ])
+}
+
+compareAE("primarysource.qualification", mapCatValues = TRUE)
+```
+
+*Country*
+```{r}
+compareAE("occurcountry.exact")
+```
+
+### Exploring Drug Names Within Reports
+
+* Generic Drug Names Included in Report
+
+**ADD NOTE ABOUT openFDA field harmonization when it comes to drug names**
+
+```{r}
+qList$count = "patient.drug.openfda.generic_name.exact"
+qList$limit = 20
+countPlot(getResults(qList), "Generic Name", "Report Counts by Harmonized Generic Name")
+```
 
 
-# Individual Drug or Adverse Event Inital Exploration
-* Top reported events (by SAE classification)
-* Reporting countries
-* Reporting country 
-* Reporter Type e.g., Dr. vs Patient (by SAE classification or other cuts)
-* Timeseries?
-* Missingness
+```{r}
+qList$count = "patient.drug.medicinalproduct"
+qList$limit = 20
+countPlot(getResults(qList), "Generic Name", "Report Counts by Reported Name")
+```
+
+
+```{r, rows.print=20, row.names = FALSE}
+qList$search = "patient.drug.medicinalproduct:METFORMIN"
+qList$count = "patient.drug.medicinalproduct.exact"
+qList$limit = 1000 #counts are limited to 1000 results
+raw_met_count = getResults(qList)
+raw_met_count = raw_met_count[grepl("METFORMIN", raw_met_count$term), ]
+names(raw_met_count)[2] = "raw_count"
+raw_met_count
+```
+
+```{r, rows.print=20, row.names = FALSE}
+qList$search = "patient.drug.openfda.generic_name:METFORMIN"
+qList$count = "patient.drug.medicinalproduct.exact"
+qList$limit = 1000
+generic_met_count = getResults(qList)
+generic_met_count[grepl("METFORMIN", generic_met_count$term), ]
+```
+
+
+```{r}
+write(content(GET(createQuery(list(search = 'patient.drug.medicinalproduct:"METFORMIN+(UNKNOWN)"'))), as = "text"), file = "./data/json_extracts/METFORMIN_UNKNOWN_example.json")
+
+```
 
 
 # Sources
