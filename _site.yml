@@ -1,5 +1,4 @@
 name: "openFDA-Explore"
-output_dir: "docs"
 navbar:
   title: "openFDA Explore"
   left:
