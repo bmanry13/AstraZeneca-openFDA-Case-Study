@@ -113,23 +113,3 @@ generic_met_count[grepl("METFORMIN", generic_met_count$term), ]
 write(content(GET(createQuery(list(search = 'patient.drug.medicinalproduct:"METFORMIN+(UNKNOWN)"'))), as = "text"), file = "./data/json_extracts/METFORMIN_UNKNOWN_example.json")
 
 ```
-
-
-# Sources
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

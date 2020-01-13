@@ -1,8 +1,8 @@
 #==============================================================================================================#
+# This file contains the general functions for used for generating queries, interacting with openFDA, and 
+#   creating the various plots and tables in the report
 #
-#
-#
-#
+# Note: given the time limitations these are still very much a WIP
 #==============================================================================================================#
 
 # ========= LIBRARY DEPENDENCIES =========#
@@ -13,9 +13,10 @@ library(ggplot2)
 # ========= FUNCTIONS =========#
 createQuery = function(queryItemList, rootURL = 'https://api.fda.gov/drug/event.json?'){
   #============================================#'
-  # Description:
-  # Inputs: Named list
-  # Outputs:
+  # Description:creates a query string using named elements in a list
+  # Inputs: queryItemList: Named list of query items available for openFDA
+  #         rootURL: root URL for openFDA query (default is FAERS)
+  # Outputs: character string URL
   #============================================#'
   stopifnot(class(queryItemList) == "list")
   #TODO: add check for valid query terms e.g., search, count, limit, skip
@@ -29,11 +30,13 @@ createQuery = function(queryItemList, rootURL = 'https://api.fda.gov/drug/event.
   return(url)
 }
 
-getResults = function(q, excludeMeta = TRUE, verbose = FALSE, renameCount = NULL){
+getResults = function(q, excludeMeta = TRUE, verbose = FALSE){
   #============================================#'
-  # Description:
-  # Inputs: 
-  # Outputs:
+  # Description: Submits request to openFDA and returns the results
+  # Inputs: q
+  #         excludeMeta (boolean): If true only results portion of JSON will be returned 
+  #         verbose (boolean): prints additional information while running
+  # Outputs: list object created by jsonlite from returned openFDA JSON
   #============================================#'
   if(!class(q) %in% c("list", "character")){
     stop("Query must be character or list")
@@ -56,9 +59,12 @@ getResults = function(q, excludeMeta = TRUE, verbose = FALSE, renameCount = NULL
 
 loadCategoryMap = function(mapName, dir = "./data/category_maps"){
   #============================================#'
-  # Description:
-  # Inputs: 
-  # Outputs:
+  # Description: Some openFDA fields use numeric values for categorical fields. 
+  #               This function allows for the creation of lookup files to map
+  #               values to text descriptions
+  # Inputs: mapName (character): name of field with categorical values
+  #         dir (character): path to directory with lookup csv files
+  # Outputs: data.frame 
   #============================================#'
   
   #check if category name is available and make sure there is only one
@@ -71,9 +77,10 @@ loadCategoryMap = function(mapName, dir = "./data/category_maps"){
 
 mapCategoryValues = function(df, n){
   #============================================#'
-  # Description:
-  # Inputs: 
-  # Outputs:
+  # Description: Merges category mapping to data.frame
+  # Inputs: df (data.frame): usually the result of a "count" query. Must have "term" as a field
+  #         n (character): name of field with categorical values
+  # Outputs: data frame
   #============================================#'
   valueMap = loadCategoryMap(mapName = n)
   grab_names = names(df)
@@ -82,12 +89,11 @@ mapCategoryValues = function(df, n){
   return(df[grab_names])
 }
 
-
 countPlot = function(plotData, axis_label, plot_title = NULL, mapCategories = NULL){
   #============================================#'
-  # Description:
+  # Description: Creates a horizontal bar plot for openFDA count query results
   # Inputs: 
-  # Outputs:
+  # Outputs: ggplot2 plot
   #============================================#'
   
   if(!is.null(mapCategories)) plotData = mapCategoryValues(plotData, mapCategories)

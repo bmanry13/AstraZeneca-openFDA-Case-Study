@@ -10,4 +10,4 @@ navbar:
 output:
   html_document:
     smart: false
-    theme: cosmo
+    theme: journal

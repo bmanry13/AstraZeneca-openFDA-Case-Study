@@ -1,0 +1,87 @@
+---
+title: "Single Drug Report (test)"
+output: html_document
+---
+```{r, echo=FALSE}
+source("./R/functions.R")
+```
+
+```{r}
+# SET TARGET DRUG NAME
+target_drug_name = "Zoladex"
+```
+
+
+```{r}
+# prep for query
+target_drug_forquery = paste0('"', gsub("\\s+", "+", target_drug_name), '"')
+
+ndc_info = getResults(createQuery(list(search = paste0(paste0(c("brand_name:", "generic_name:"), target_drug_forquery), collapse = "+")), 
+                                  rootURL = "https://api.fda.gov/drug/ndc.json?"))
+label_info = getResults(createQuery(list(search = paste0(paste0(c("openfda.brand_name:", "openfda.generic_name:"), target_drug_forquery), collapse = "+")), 
+                                    rootURL = "https://api.fda.gov/drug/label.json?"))
+
+print(label_info)
+print(ndc_info)
+
+```
+
+```{r}
+#TODO: need to test how this works it there are multiple generic names not sure what the response will be shaped like
+generic_names = unlist(ndc_info$generic_name)
+generic_names_forquery = gsub("\\s+", "+",generic_names)
+```
+
+```{r}
+qList = list(
+  search =  paste0(c("openfda.brand_name:", "openfda.generic_name:", "patient.drug.medicinalproduct:"), 
+                   paste0("(",paste0( c(target_drug_forquery, generic_names_forquery), collapse = "+"), ")"), collapse = "+"),
+  "count" = "patient.reaction.reactionmeddrapt.exact", 
+  "limit" = 10)
+
+countPlot(getResults(qList), "Adverse Event Type", paste("Top-10 AE for Reports with", paste(c(target_drug_name, generic_names), collapse = " or ")))
+```
+
+```{r}
+qList = list(
+  search =  paste0(c("openfda.brand_name:", "openfda.generic_name:", "patient.drug.medicinalproduct:"),target_drug_forquery , collapse = "+"),
+  "count" = "patient.reaction.reactionmeddrapt.exact", 
+  "limit" = 10)
+
+countPlot(getResults(qList), "Adverse Event Type", paste("Top-10 Reported AE for Reports with", target_drug_name))
+```
+
+
+
+```{r}
+qList$count = "patient.drug.medicinalproduct.exact"
+qList$limit = 20
+countPlot(getResults(qList), "Reported Name", "Report Counts by Harmonized Generic Name")
+```
+
+
+Gather All Reports For the Target Drug
+```{r}
+qList$count = NULL
+qList$limit = 100
+q = createQuery(qList)
+initalQuery = getResults(q, excludeMeta = FALSE)
+
+#Get total number of recordsfrom metadata
+total_results = initalQuery$meta$results$total
+
+# Get all records if more than 100 total (TODO: should check if mutliple connections are possible and run in parallel or use source code to change limits)
+# if(total_results > nrow(initalQuery$results)){
+#   totalIterations = floor(total_results/100)
+#   fullList = lapply(paste0(q, "&skip=", 100*(0:totalIterations)), getResults) # first 100 is redundant with inital query, should update in future
+# }
+# 
+# fullList2 = unlist(fullList, recursive=FALSE)
+# 
+# length(fullList[[3]])
+
+```
+
+
+
+
