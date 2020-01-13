@@ -1,0 +1,71 @@
+---
+title: "Documentation Review"
+---
+
+Since this is my first time using the openFDA API to access data from the FDA Adverse Event Reporting System (FAERS). Because of this it is important that I first explore: 1) how data is accessed; 2) what data is available; and 3) potental limitations and biases inherent to the data.
+
+
+# Overwview of openFDA FAERS Data
+
+A general overview of the openFDA adverse event API and the data it contains can be found at [https://open.fda.gov/apis/drug/event/](FAERS Drug Adverse Event Overview). I've summarized some high-level information from that site below. In addition I've added some initial observations and commentary on potential limitations and/or biases based on how the data is collected.
+
+### Where does it come from?
+
+Adverse events are captured in the of "safety reports" using the [ICH E2b/M2 version 2.1 standard](https://admin.ich.org/sites/default/files/inline-files/ICH_ICSR_Specification_V2-3.pdf). These reports can be submitted by healthcare professionals, manufacturer, or the general public. 
+
+### What information do the reports contain?
+
+**ADD LINK TO FIELDS IN DATA**
+
+There is a wide range of data fields potentially available for each report. With the correct processing pipeline it would likely be possible to extact additional information out of the raw reports. For example, NPL or other text processing (e.g., some form of text distance metric) could be used to handle help address issues like spelling and punctuation. Additionally, More advanced semantic NPL analysis might be able use 
+
+
+### Limitations
+* FDA Disclaimer
+* Causal relationthips
+* Multi-drug reporting
+* Know issues with spelling / data entry
+* Harmonization
+
+In some cases within the data the FDA has attempted to imbed standardized drug information like brand name, generic name, NDC, etc. within each openFDA report. Though helpful for searches and combining products across datasets, the harmonization process only works for very specific cases (e.g., the drug name is spelled correctly). Furthermore, upon closer examination of randomly selected JSON reports it appears that even when spelled correctly a drug might not be "harmonized". I've included an sample report JSON in this repository as an example **TODO ADD LINK**. In that report both Atorvastatin and Lipitor are included in the list of drugs however neither have harmonized openFDA data available despite correct spellings.
+
+Because of these issues, querying openFDA events reports using using openFDA harmonized should be done with caution and an understanding of the limitatins/biases that may result from it. The results will be much cleaner and easier to use, but they might not provide an accurate representation of the actual rate of drug occurance within the data.**add note/link about custom processing pipeline**
+
+When harmonization has been successful the openFDA fields will be populated for a given drug within the report. More information about the harmonization process can be found on the openFDA website [here](https://open.fda.gov/apis/openfda-fields/).
+
+
+* missing values
+* Duplicate reports (there is some automation but it is not perfect)
+* Biases: location, reporter, socioeconomic,etc.
+
+# Accessing openFDA Adverse Event Reports
+* *TODO: Overview of how data can be accessed API vs Download*
+* Why API use for this case and the potential for a processing pipeline to download quarterly extracts w/ processing - Cleaning names using dist or NPL
+
+
+### Accessing Data Via API
+
+**ADD INFORMATION ABOUT THE API AND WHAT IT RETURNS**
+
+**LINK TO RESULTS JSON FROM A QUERY?**
+
+
+Note: There are R libraries available on github which help streamline the openFDA API request process, however in an effort to gain a better understanding of the API syntax, and to maximize the ease of rerunning this case study without the need for uncommon R libraries, I've decided use a minimum number of R libraries limited only yo common packages which are typically presnent in most R enviroments **ADD LINK TO PACKAGE DEPENDENCIES**.
+
+If part of these analysis were to be transistioned into a more robust product it would be prudent to use an exisiting library like **ADD LINK TO rOpenHealth/openfda**, or develop a custom package, which standardizes processes used when interacting with the openFDA API. These functions would allow for greater fexability and a more dynamic way to interact with the openFDA data.
+
+### API Limitations
+Requests are limited per day per IP address: without API key (1000 requests); with key 120000 requests per day
+Report requests are limited to 100 reports per request
+Count requests are limitd to 1000 values per request
+
+For this analysis queries will be limited to count summaries available directly from the openFDA API and subsets of reports for a specific and limited search **ADD A WHY**
+
+### Downloading Full Data Extracts
+
+As an alternative to using the API to search for specific reports, it is also possible to download all full datasets of reports from the openFDA site. **LINK TO DATASET INFORMATIION ON SITE**. 
+
+** Production pipeline to periodically download openFDA information, process it based on known limitations/errors and to facilitate products which use the data**
+
+* Create fuction for downloading and processing whole quarters (or just multiple data sets)
+* Note that it is possible to sync with S3 bucket (might be easiest way to maintain production copy), download via the API
