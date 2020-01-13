@@ -15,7 +15,7 @@
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<link href="site_libs/bootstrap-3.3.5/css/journal.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
@@ -97,34 +97,34 @@ button.code-folding-btn:focus {
 <style type="text/css">
 /* padding for bootstrap navbar */
 body {
-  padding-top: 51px;
+  padding-top: 61px;
   padding-bottom: 40px;
 }
 /* offset scroll position for anchor links (for fixed navbar)  */
 .section h1 {
-  padding-top: 56px;
-  margin-top: -56px;
+  padding-top: 66px;
+  margin-top: -66px;
 }
 
 .section h2 {
-  padding-top: 56px;
-  margin-top: -56px;
+  padding-top: 66px;
+  margin-top: -66px;
 }
 .section h3 {
-  padding-top: 56px;
-  margin-top: -56px;
+  padding-top: 66px;
+  margin-top: -66px;
 }
 .section h4 {
-  padding-top: 56px;
-  margin-top: -56px;
+  padding-top: 66px;
+  margin-top: -66px;
 }
 .section h5 {
-  padding-top: 56px;
-  margin-top: -56px;
+  padding-top: 66px;
+  margin-top: -66px;
 }
 .section h6 {
-  padding-top: 56px;
-  margin-top: -56px;
+  padding-top: 66px;
+  margin-top: -66px;
 }
 </style>
 
@@ -198,63 +198,69 @@ $(document).ready(function () {
 </div>
 
 
+<section id="introduction" class="level1">
+<h1>Introduction</h1>
 <p>Since this is my first time using the openFDA API to access data from the FDA Adverse Event Reporting System (FAERS). Because of this it is important that I first explore: 1) how data is accessed; 2) what data is available; and 3) potental limitations and biases inherent to the data.</p>
+<p>Additionally, since this case was created over a limited time for the interview I have chosen to be more verbose and conversational with my observations and comments throughout the various files. This will hopefully provide a clearer, more explicit, picture of my thought process as explore this openFDA FAERS API data.</p>
+</section>
 <section id="overwview-of-openfda-faers-data" class="level1">
 <h1>Overwview of openFDA FAERS Data</h1>
 <p>A general overview of the openFDA adverse event API and the data it contains can be found at <a href="FAERS%20Drug%20Adverse%20Event%20Overview">https://open.fda.gov/apis/drug/event/</a>. I’ve summarized some high-level information from that site below. In addition I’ve added some initial observations and commentary on potential limitations and/or biases based on how the data is collected.</p>
 <section id="where-does-it-come-from" class="level3">
 <h3>Where does it come from?</h3>
 <p>Adverse events are captured in the of “safety reports” using the <a href="https://admin.ich.org/sites/default/files/inline-files/ICH_ICSR_Specification_V2-3.pdf">ICH E2b/M2 version 2.1 standard</a>. These reports can be submitted by healthcare professionals, manufacturer, or the general public.</p>
+<p><em>Note: The information accuracy (e.g., spelling, AE type) could be heavily dependent on the type of person submitting the report, and may need to be accounted for when using this data</em></p>
 </section>
 <section id="what-information-do-the-reports-contain" class="level3">
 <h3>What information do the reports contain?</h3>
-<p><strong>ADD LINK TO FIELDS IN DATA</strong></p>
-<p>There is a wide range of data fields potentially available for each report. With the correct processing pipeline it would likely be possible to extact additional information out of the raw reports. For example, NPL or other text processing (e.g., some form of text distance metric) could be used to handle help address issues like spelling and punctuation. Additionally, More advanced semantic NPL analysis might be able use</p>
+<p>A full list of searchable fields can be found on the openFDA site <a href="https://open.fda.gov/apis/drug/event/searchable-fields">here</a></p>
+<p>There is a wide range of data fields potentially available for each report. With the correct processing pipeline it would likely be possible to extact additional information out of the raw FAERS reports. For example, NPL or other text processing (e.g., some form of text distance metric) could be used to handle help address issues like spelling and punctuation. Additionally, More advanced semantic NPL analysis might be able use to combine data from across other openFDA datasets like NDC or labeling.</p>
 </section>
 <section id="limitations" class="level3">
 <h3>Limitations</h3>
 <ul>
-<li>FDA Disclaimer</li>
-<li>Causal relationthips</li>
-<li>Multi-drug reporting</li>
-<li>Know issues with spelling / data entry</li>
-<li>Harmonization</li>
-</ul>
-<p>In some cases within the data the FDA has attempted to imbed standardized drug information like brand name, generic name, NDC, etc. within each openFDA report. Though helpful for searches and combining products across datasets, the harmonization process only works for very specific cases (e.g., the drug name is spelled correctly). Furthermore, upon closer examination of randomly selected JSON reports it appears that even when spelled correctly a drug might not be “harmonized”. I’ve included an sample report JSON in this repository as an example <strong>TODO ADD LINK</strong>. In that report both Atorvastatin and Lipitor are included in the list of drugs however neither have harmonized openFDA data available despite correct spellings.</p>
-<p>Because of these issues, querying openFDA events reports using using openFDA harmonized should be done with caution and an understanding of the limitatins/biases that may result from it. The results will be much cleaner and easier to use, but they might not provide an accurate representation of the actual rate of drug occurance within the data.<strong>add note/link about custom processing pipeline</strong></p>
-<p>When harmonization has been successful the openFDA fields will be populated for a given drug within the report. More information about the harmonization process can be found on the openFDA website <a href="https://open.fda.gov/apis/openfda-fields/">here</a>.</p>
-<ul>
-<li>missing values</li>
+<li>Causal relationthips: openFDA are not vetted or standardized; are relient on the information provided by the reporter; and only represent events which are actually reported. Causal relationships should not be drawn from the data, and any insights drawn from the data should take these limitations into account.</li>
+<li>Know issues with spelling / data entry:</li>
+<li>Multi-drug reporting multi-event reporting can make querying the data tricky and it is not possible to determine if any single drug (or combination of drugs) is responsible for a given event</li>
+<li>Not all fields are required when the report is submitted so it is possible that missingness could be non-random and dependent on factors such as who is submitting the report.</li>
 <li>Duplicate reports (there is some automation but it is not perfect)</li>
-<li>Biases: location, reporter, socioeconomic,etc.</li>
+<li>Potential biases based on factors such as : location, reporter, socioeconomic,etc.</li>
 </ul>
+<p>####Harmonization In some cases within the data the FDA has attempted to imbed standardized drug information like brand name, generic name, NDC, etc. within each openFDA report. Though helpful for searches and combining products across datasets, the harmonization process only works for very specific cases (e.g., the drug name is spelled correctly). Furthermore, upon closer examination of randomly selected JSON reports it appears that even when spelled correctly a drug might not be “harmonized”. In that report both Atorvastatin and Lipitor are included in the list of drugs however neither have harmonized openFDA data available despite correct spellings.</p>
+<p>Because of these issues, querying openFDA events reports using using openFDA harmonized should be done with caution and an understanding of the limitatins/biases that may result from it. The results will be much cleaner and easier to use, but they might not provide an accurate representation of the actual rate of drug occurance within the data.</p>
+<p>When harmonization has been successful the openFDA fields will be populated for a given drug within the report. More information about the harmonization process can be found on the openFDA website <a href="https://open.fda.gov/apis/openfda-fields/">here</a>.</p>
+<p><em>Note: creating a processing pipeline which attempts to mitigate some of the know issues/limitations in the data could help create a more useful dataset to use for analysis</em></p>
 </section>
 </section>
 <section id="accessing-openfda-adverse-event-reports" class="level1">
 <h1>Accessing openFDA Adverse Event Reports</h1>
-<ul>
-<li><em>TODO: Overview of how data can be accessed API vs Download</em></li>
-<li>Why API use for this case and the potential for a processing pipeline to download quarterly extracts w/ processing - Cleaning names using dist or NPL</li>
-</ul>
 <section id="accessing-data-via-api" class="level3">
 <h3>Accessing Data Via API</h3>
-<p><strong>ADD INFORMATION ABOUT THE API AND WHAT IT RETURNS</strong></p>
-<p><strong>LINK TO RESULTS JSON FROM A QUERY?</strong></p>
-<p>Note: There are R libraries available on github which help streamline the openFDA API request process, however in an effort to gain a better understanding of the API syntax, and to maximize the ease of rerunning this case study without the need for uncommon R libraries, I’ve decided use a minimum number of R libraries limited only yo common packages which are typically presnent in most R enviroments <strong>ADD LINK TO PACKAGE DEPENDENCIES</strong>.</p>
-<p>If part of these analysis were to be transistioned into a more robust product it would be prudent to use an exisiting library like <strong>ADD LINK TO rOpenHealth/openfda</strong>, or develop a custom package, which standardizes processes used when interacting with the openFDA API. These functions would allow for greater fexability and a more dynamic way to interact with the openFDA data.</p>
+<p>The general structure of the json can be found on the openFDA</p>
+<p><a href="https://raw.githubusercontent.com/bmanry13/AstraZeneca-openFDA-Case-Study/master/data/json_extracts/example_json.json">EXAMPLE REPORT JSON</a></p>
+<p>Note: There are R libraries available on github which help streamline the openFDA API request process, however in an effort to gain a better understanding of the API syntax, and to maximize the ease of rerunning this case study without the need for uncommon R libraries, I’ve decided use a minimum number of R libraries limited only yo common packages which are typically presnent in most R enviroments.</p>
+<p>If part of these analysis were to be transistioned into a more robust product it would be prudent to use an exisiting library like <a href="https://github.com/rOpenHealth/openfda">rOpenHealth</a>, or develop a custom package, which standardizes processes used when interacting with the openFDA API. These functions would allow for greater fexability and a more dynamic way to interact with the openFDA data.</p>
 </section>
 <section id="api-limitations" class="level3">
 <h3>API Limitations</h3>
-<p>Requests are limited per day per IP address: without API key (1000 requests); with key 120000 requests per day Report requests are limited to 100 reports per request Count requests are limitd to 1000 values per request</p>
-<p>For this analysis queries will be limited to count summaries available directly from the openFDA API and subsets of reports for a specific and limited search <strong>ADD A WHY</strong></p>
+<ul>
+<li>Requests are limited per day per IP address: without API key (1000 requests); with key 120000 requests per day</li>
+<li>Report requests are limited to 100 reports per request</li>
+<li>Count requests are limitd to 1000 values per request</li>
+</ul>
+<p>Due to size and time restraints, for this analysis queries will be limited to count summaries available directly from the openFDA API and subsets of reports for a specific and limited search criteria.</p>
 </section>
 <section id="downloading-full-data-extracts" class="level3">
 <h3>Downloading Full Data Extracts</h3>
-<p>As an alternative to using the API to search for specific reports, it is also possible to download all full datasets of reports from the openFDA site. <strong>LINK TO DATASET INFORMATIION ON SITE</strong>.</p>
-<p>** Production pipeline to periodically download openFDA information, process it based on known limitations/errors and to facilitate products which use the data**</p>
+<p>As an alternative to using the API to search for specific reports, it is also possible to download all full datasets of reports from the <a href="https://open.fda.gov/apis/downloads/">openFDA site</a>. These full extracts could be use in conjuction with a production processing pipeline to periodically download openFDA information, process it based on known limitations/errors and to facilitate products which use the data. This pipeline could use the available dataset API or by syncing the S3 bucket (might be easiest way to maintain production copy).</p>
+</section>
+<section id="r-packages-used-in-analysis" class="level3">
+<h3>R Packages Used In Analysis</h3>
+<p>Though I will typically use additional packages like <a href="">dplyr</a> or other <a href="">tidyverse</a> libraries, for this case I tried to keep external package requirements to a minimum so preformed most data manipulation using base R functionality.</p>
 <ul>
-<li>Create fuction for downloading and processing whole quarters (or just multiple data sets)</li>
-<li>Note that it is possible to sync with S3 bucket (might be easiest way to maintain production copy), download via the API</li>
+<li>ggplot2: <a href="https://github.com/hadley/ggplot2" class="uri">https://github.com/hadley/ggplot2</a></li>
+<li>jsonlite: <a href="https://github.com/jeroen/jsonlite" class="uri">https://github.com/jeroen/jsonlite</a></li>
+<li>httr: <a href="https://github.com/r-lib/httr" class="uri">https://github.com/r-lib/httr</a></li>
 </ul>
 </section>
 </section>
