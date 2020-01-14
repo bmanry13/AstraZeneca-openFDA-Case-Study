@@ -1,6 +1,7 @@
 ---
 title: "Documentation Review"
 ---
+
 # Introduction
 Since this is my first time using the openFDA API to access data from the FDA Adverse Event Reporting System (FAERS). Because of this it is important that I first explore: 1) how data is accessed; 2) what data is available; and 3) potential limitations and biases inherent to the data.
 

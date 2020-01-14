@@ -232,7 +232,7 @@ library(jsonlite)
 #=== NON-COUNT QUERY EXAMPLE ===#
 #- Let&#39;s find all records which mention a rash reaction
 # 1) Define the query url
-url = &#39;https://api.fda.gov/drug/event.json?search=patient.reaction.reactionmeddrapt:&quot;rash&quot;&#39;
+url = &#39;https://api.fda.gov/drug/event.json?api_key=umOJyfx1udGdQjn1XtT1XGasUjSbgiDIvsJ47jiB&amp;search=patient.reaction.reactionmeddrapt:&quot;rash&quot;&#39;
 #- 2) Set get request to openFDA API and capture response
 rash_response = GET(url)
 #- 3) Convert response() object to text object (this will be the standard JSON formatted text)
