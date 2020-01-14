@@ -1,0 +1,157 @@
+---
+title: "Feasability Testing"
+---
+```{r, message=FALSE}
+library(dplyr)
+library(tidyr)
+library(httr)
+library(jsonlite)
+library(ggplot2)
+source("./R/functions.R")
+```
+
+
+## Multi-Count Query
+
+Attmepting to get categorical subtotals for a set list of categories e.g.,
+
+For this test I will use patient.reaction.reactionmeddrapt.exact counts within primarysource.qualification
+
+```{r}
+# get top 1000 patient.reaction.reactionmeddrapt.exact for each
+topReacts = lapply(1:5, function(x){
+  tempDF = getResults(list(search = paste0("primarysource.qualification:", x), count="patient.reaction.reactionmeddrapt.exact", limit=1000))
+  tempDF$primarysource.qualification = x
+  return(tempDF)
+})
+topReacts = bind_rows(topReacts) %>% left_join(loadCategoryMap("primarysource.qualification") %>% rename(primarysource.qualification = term))
+str(topReacts)
+
+```
+
+
+*Top-5 Reactions Within Each Reporting Type*
+```{r}
+plotData = topReacts %>% group_by(term_value) %>% filter(order(-count) <= 5)
+ggplot(plotData, aes(as.character(term_value), count, fill = term)) +
+         geom_bar(stat = "Identity") +
+  xlab("Reporter Type") +
+  coord_flip()
+
+```
+
+*Normalized* 
+
+```{r}
+plotData = topReacts %>% group_by(term_value) %>% mutate(pct_of_total = count / sum(count)) %>% filter(order(-pct_of_total) <= 5)
+ggplot(plotData, aes(as.character(term_value), pct_of_total, fill = term)) +
+         geom_bar(stat = "Identity") +
+  xlab("Reporter Type") +
+  scale_y_continuous(labels = function(x) paste0(x*100, "%")) +
+  coord_flip()
+
+```
+
+
+
+## Download Records Beyond Limit Using Skip
+
+Find a query with a resonable number of records to download
+
+```{r}
+qList = list(
+  search = 'patient.drug.medicinalproduct:"Zoladex"+AND+serious:1+AND+primarysource.qualification:5',
+  limit=100)
+
+q = createQuery(qList)
+initialQuery = getResults(q, excludeMeta = FALSE)
+total_results = initialQuery$meta$results$total
+print(total_results)
+```
+
+Calculate number of iterations necessary and then iteratively download all records
+
+```{r}
+#Get all records if more than 100 total (TODO: should check if mutliple connections are possible and run in parallel or use source code to change limits)
+if(total_results > nrow(initialQuery$results)){
+  totalIterations = floor(total_results/100)
+  fullList = lapply(paste0(q, "&skip=", 100*(0:totalIterations)), getResults, verbose = TRUE) # first 100 is redundant with initial query, should update in future
+}
+
+# Combine into single data frame
+fullList = rbind_pages(fullList)
+```
+
+```{r}
+# DF Rows should match metadata total 
+
+nrow(fullList) == total_results
+```
+
+```{r}
+head(fullList)
+```
+
+## Expaned Drug Search Using NDC Dataset
+
+```{r}
+# SET TARGET DRUG NAME
+target_drug_name = "Zoladex"
+```
+
+
+```{r}
+# prep for query
+target_drug_forquery = paste0('"', gsub("\\s+", "+", target_drug_name), '"')
+
+ndc_info = getResults(createQuery(list(search = paste0(paste0(c("brand_name:", "generic_name:"), target_drug_forquery), collapse = "+")), 
+                                  rootURL = "https://api.fda.gov/drug/ndc.json?"))
+label_info = getResults(createQuery(list(search = paste0(paste0(c("openfda.brand_name:", "openfda.generic_name:"), target_drug_forquery), collapse = "+")), 
+                                    rootURL = "https://api.fda.gov/drug/label.json?"))
+
+print(label_info)
+print(ndc_info)
+
+```
+
+```{r}
+#TODO: need to test how this works it there are multiple generic names not sure what the response will be shaped like
+generic_names = unlist(ndc_info$generic_name)
+generic_names_forquery = gsub("\\s+", "+",generic_names)
+```
+
+```{r}
+qList = list(
+  search =  paste0(c("openfda.brand_name:", "openfda.generic_name:", "patient.drug.medicinalproduct:"), 
+                   paste0("(",paste0( c(target_drug_forquery, generic_names_forquery), collapse = "+"), ")"), collapse = "+"),
+  "count" = "patient.reaction.reactionmeddrapt.exact", 
+  "limit" = 10)
+
+countPlot(getResults(qList), "Adverse Event Type", paste("Top-10 AE for Reports with", paste(c(target_drug_name, generic_names), collapse = " or ")))
+```
+
+```{r}
+qList = list(
+  search =  paste0(c("openfda.brand_name:", "openfda.generic_name:", "patient.drug.medicinalproduct:"),target_drug_forquery , collapse = "+"),
+  "count" = "patient.reaction.reactionmeddrapt.exact", 
+  "limit" = 10)
+
+countPlot(getResults(qList), "Adverse Event Type", paste("Top-10 Reported AE for Reports with", target_drug_name))
+```
+
+```{r}
+qList$count = "patient.drug.medicinalproduct.exact"
+qList$limit = 20
+countPlot(getResults(qList), "Reported Name", "Report Counts by Harmonized Generic Name")
+```
+
+
+
+## TODO:Automatically Download All Datasets for A Given Quarter
+
+
+
+
+
+
+

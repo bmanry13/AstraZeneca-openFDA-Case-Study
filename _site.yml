@@ -7,8 +7,8 @@ navbar:
       href: index.html
     - text: "Initial Data Exploration"
       href: Initial-Data-Exploration.html
-    - text: "Case Study"
-      href: test-drug-report.html
+    - text: "Feasability Testing"
+      href: Feasability-Testing.html
 output:
   html_document:
     smart: false

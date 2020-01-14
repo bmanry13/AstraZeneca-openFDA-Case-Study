@@ -7,6 +7,8 @@ Since this is my first time using the openFDA API to access data from the FDA Ad
 
 Additionally, since this case was created over a limited time for the interview, I have chosen to be more verbose and conversational with my observations and comments throughout the various files. This will hopefully provide a clearer, more explicit, picture of my thought process as explore this openFDA FAERS API data.
 
+----
+
 # Overview of openFDA FAERS Data
 
 A general overview of the openFDA adverse event API and the data it contains can be found at [https://open.fda.gov/apis/drug/event/](FAERS Drug Adverse Event Overview). I've summarized some high-level information from that site below. In addition, I've added some initial observations and commentary on potential limitations and/or biases based on how the data is collected.
@@ -31,7 +33,8 @@ There is a wide range of data fields potentially available for each report. With
 * Duplicate reports (there is some automation but it is not perfect)
 * Potential biases based on factors such as: location, reporter, socioeconomic, etc.
 
-####Harmonization 
+**Harmonization**
+
 In some cases within the data the FDA has attempted to imbed standardized drug information like brand name, generic name, NDC, etc. within each openFDA report. Though helpful for searches and combining products across datasets, the harmonization process only works for very specific cases (e.g., the drug name is spelled correctly). Furthermore, upon closer examination of randomly selected JSON reports it appears that even when spelled correctly a drug might not be "harmonized". In that report both Atorvastatin and Lipitor are included in the list of drugs however neither have harmonized openFDA data available despite correct spellings.
 
 Because of these issues, querying openFDA events reports using openFDA harmonized should be done with caution and an understanding of the limitations/biases that may result from it. The results will be much cleaner and easier to use, but they might not provide an accurate representation of the actual rate of drug occurrence within the data.
@@ -39,6 +42,8 @@ Because of these issues, querying openFDA events reports using openFDA harmonize
 When harmonization has been successful the openFDA fields will be populated for a given drug within the report. More information about the harmonization process can be found on the openFDA website [here](https://open.fda.gov/apis/openfda-fields/).
 
 *Note: creating a processing pipeline which attempts to mitigate some of the know issues/limitations in the data could help create a more useful dataset to use for analysis* 
+
+----
 
 # Accessing openFDA Adverse Event Reports
 
@@ -62,10 +67,16 @@ Due to size and time restraints, for this analysis queries will be limited to co
 ### Downloading Full Data Extracts
 As an alternative to using the API to search for specific reports, it is also possible to download all full datasets of reports from the [openFDA site](https://open.fda.gov/apis/downloads/). These full extracts could be use in conjunction with a production processing pipeline to periodically download openFDA information, process it based on known limitations/errors and to facilitate products which use the data. This pipeline could use the available dataset API or by syncing the S3 bucket (might be easiest way to maintain production copy).
 
+----
 
 ### R Packages Used in Analysis
-Though I will typically use additional packages like [dplyr]() or other [tidyverse]() libraries, for this case I tried to keep external package requirements to a minimum so preformed most data manipulation using base R functionality. 
-
 - ggplot2: [https://github.com/hadley/ggplot2](https://github.com/hadley/ggplot2)
 - jsonlite: [https://github.com/jeroen/jsonlite](https://github.com/jeroen/jsonlite)
-- httr: [https://github.com/r-lib/httr](https://github.com/r-lib/httr)
+- dplyr: [https://github.com/tidyverse/dplyr](https://github.com/tidyverse/dplyr)
+- tidyr: [https://github.com/tidyverse/tidyr](https://github.com/tidyverse/tidyr)
+- rmarkdown: [https://github.com/rstudio/rmarkdown](https://github.com/rstudio/rmarkdown)
+- knitr: [https://github.com/yihui/knitr](https://github.com/yihui/knitr)
+- kableExtra: [https://github.com/haozhu233/kableExtra](https://github.com/haozhu233/kableExtra)
+
+
+

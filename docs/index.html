@@ -182,7 +182,7 @@ $(document).ready(function () {
   <a href="Initial-Data-Exploration.html">Initial Data Exploration</a>
 </li>
 <li>
-  <a href="test-drug-report.html">Case Study</a>
+  <a href="Feasability-Testing.html">Feasability Testing</a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -205,6 +205,7 @@ $(document).ready(function () {
 <h1>Introduction</h1>
 <p>Since this is my first time using the openFDA API to access data from the FDA Adverse Event Reporting System (FAERS). Because of this it is important that I first explore: 1) how data is accessed; 2) what data is available; and 3) potential limitations and biases inherent to the data.</p>
 <p>Additionally, since this case was created over a limited time for the interview, I have chosen to be more verbose and conversational with my observations and comments throughout the various files. This will hopefully provide a clearer, more explicit, picture of my thought process as explore this openFDA FAERS API data.</p>
+<hr />
 </section>
 <section id="overview-of-openfda-faers-data" class="level1">
 <h1>Overview of openFDA FAERS Data</h1>
@@ -229,10 +230,12 @@ $(document).ready(function () {
 <li>Duplicate reports (there is some automation but it is not perfect)</li>
 <li>Potential biases based on factors such as: location, reporter, socioeconomic, etc.</li>
 </ul>
-<p>####Harmonization In some cases within the data the FDA has attempted to imbed standardized drug information like brand name, generic name, NDC, etc. within each openFDA report. Though helpful for searches and combining products across datasets, the harmonization process only works for very specific cases (e.g., the drug name is spelled correctly). Furthermore, upon closer examination of randomly selected JSON reports it appears that even when spelled correctly a drug might not be “harmonized”. In that report both Atorvastatin and Lipitor are included in the list of drugs however neither have harmonized openFDA data available despite correct spellings.</p>
+<p><strong>Harmonization</strong></p>
+<p>In some cases within the data the FDA has attempted to imbed standardized drug information like brand name, generic name, NDC, etc. within each openFDA report. Though helpful for searches and combining products across datasets, the harmonization process only works for very specific cases (e.g., the drug name is spelled correctly). Furthermore, upon closer examination of randomly selected JSON reports it appears that even when spelled correctly a drug might not be “harmonized”. In that report both Atorvastatin and Lipitor are included in the list of drugs however neither have harmonized openFDA data available despite correct spellings.</p>
 <p>Because of these issues, querying openFDA events reports using openFDA harmonized should be done with caution and an understanding of the limitations/biases that may result from it. The results will be much cleaner and easier to use, but they might not provide an accurate representation of the actual rate of drug occurrence within the data.</p>
 <p>When harmonization has been successful the openFDA fields will be populated for a given drug within the report. More information about the harmonization process can be found on the openFDA website <a href="https://open.fda.gov/apis/openfda-fields/">here</a>.</p>
 <p><em>Note: creating a processing pipeline which attempts to mitigate some of the know issues/limitations in the data could help create a more useful dataset to use for analysis</em></p>
+<hr />
 </section>
 </section>
 <section id="accessing-openfda-adverse-event-reports" class="level1">
@@ -256,14 +259,18 @@ $(document).ready(function () {
 <section id="downloading-full-data-extracts" class="level3">
 <h3>Downloading Full Data Extracts</h3>
 <p>As an alternative to using the API to search for specific reports, it is also possible to download all full datasets of reports from the <a href="https://open.fda.gov/apis/downloads/">openFDA site</a>. These full extracts could be use in conjunction with a production processing pipeline to periodically download openFDA information, process it based on known limitations/errors and to facilitate products which use the data. This pipeline could use the available dataset API or by syncing the S3 bucket (might be easiest way to maintain production copy).</p>
+<hr />
 </section>
 <section id="r-packages-used-in-analysis" class="level3">
 <h3>R Packages Used in Analysis</h3>
-<p>Though I will typically use additional packages like <a href="">dplyr</a> or other <a href="">tidyverse</a> libraries, for this case I tried to keep external package requirements to a minimum so preformed most data manipulation using base R functionality.</p>
 <ul>
 <li>ggplot2: <a href="https://github.com/hadley/ggplot2" class="uri">https://github.com/hadley/ggplot2</a></li>
 <li>jsonlite: <a href="https://github.com/jeroen/jsonlite" class="uri">https://github.com/jeroen/jsonlite</a></li>
-<li>httr: <a href="https://github.com/r-lib/httr" class="uri">https://github.com/r-lib/httr</a></li>
+<li>dplyr: <a href="https://github.com/tidyverse/dplyr" class="uri">https://github.com/tidyverse/dplyr</a></li>
+<li>tidyr: <a href="https://github.com/tidyverse/tidyr" class="uri">https://github.com/tidyverse/tidyr</a></li>
+<li>rmarkdown: <a href="https://github.com/rstudio/rmarkdown" class="uri">https://github.com/rstudio/rmarkdown</a></li>
+<li>knitr: <a href="https://github.com/yihui/knitr" class="uri">https://github.com/yihui/knitr</a></li>
+<li>kableExtra: <a href="https://github.com/haozhu233/kableExtra" class="uri">https://github.com/haozhu233/kableExtra</a></li>
 </ul>
 </section>
 </section>
