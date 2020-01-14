@@ -11,7 +11,7 @@
 
 
 
-<title>Case Study - Single Drug Report (test)</title>
+<title>README.utf8</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -182,7 +182,7 @@ $(document).ready(function () {
   <a href="Initial-Data-Exploration.html">Initial Data Exploration</a>
 </li>
 <li>
-  <a href="test-drug-report.html">Case Study</a>
+  <a href="Feasability-Testing.html">Feasability Testing</a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -196,73 +196,35 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">Case Study - Single Drug Report (test)</h1>
 
 </div>
 
 
-<pre class="r"><code># SET TARGET DRUG NAME
-target_drug_name = &quot;Zoladex&quot;</code></pre>
-<pre class="r"><code># prep for query
-target_drug_forquery = paste0(&#39;&quot;&#39;, gsub(&quot;\\s+&quot;, &quot;+&quot;, target_drug_name), &#39;&quot;&#39;)
-
-ndc_info = getResults(createQuery(list(search = paste0(paste0(c(&quot;brand_name:&quot;, &quot;generic_name:&quot;), target_drug_forquery), collapse = &quot;+&quot;)), 
-                                  rootURL = &quot;https://api.fda.gov/drug/ndc.json?&quot;))</code></pre>
-<pre><code>## No encoding supplied: defaulting to UTF-8.</code></pre>
-<pre class="r"><code>label_info = getResults(createQuery(list(search = paste0(paste0(c(&quot;openfda.brand_name:&quot;, &quot;openfda.generic_name:&quot;), target_drug_forquery), collapse = &quot;+&quot;)), 
-                                    rootURL = &quot;https://api.fda.gov/drug/label.json?&quot;))</code></pre>
-<pre><code>## No encoding supplied: defaulting to UTF-8.</code></pre>
-<pre class="r"><code>print(label_info)</code></pre>
-<pre><code>## NULL</code></pre>
-<pre class="r"><code>print(ndc_info)</code></pre>
-<pre><code>## NULL</code></pre>
-<pre class="r"><code>#TODO: need to test how this works it there are multiple generic names not sure what the response will be shaped like
-generic_names = unlist(ndc_info$generic_name)
-generic_names_forquery = gsub(&quot;\\s+&quot;, &quot;+&quot;,generic_names)</code></pre>
-<pre class="r"><code>qList = list(
-  search =  paste0(c(&quot;openfda.brand_name:&quot;, &quot;openfda.generic_name:&quot;, &quot;patient.drug.medicinalproduct:&quot;), 
-                   paste0(&quot;(&quot;,paste0( c(target_drug_forquery, generic_names_forquery), collapse = &quot;+&quot;), &quot;)&quot;), collapse = &quot;+&quot;),
-  &quot;count&quot; = &quot;patient.reaction.reactionmeddrapt.exact&quot;, 
-  &quot;limit&quot; = 10)
-
-countPlot(getResults(qList), &quot;Adverse Event Type&quot;, paste(&quot;Top-10 AE for Reports with&quot;, paste(c(target_drug_name, generic_names), collapse = &quot; or &quot;)))</code></pre>
-<p><img src="test-drug-report_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
-<pre class="r"><code>qList = list(
-  search =  paste0(c(&quot;openfda.brand_name:&quot;, &quot;openfda.generic_name:&quot;, &quot;patient.drug.medicinalproduct:&quot;),target_drug_forquery , collapse = &quot;+&quot;),
-  &quot;count&quot; = &quot;patient.reaction.reactionmeddrapt.exact&quot;, 
-  &quot;limit&quot; = 10)
-
-countPlot(getResults(qList), &quot;Adverse Event Type&quot;, paste(&quot;Top-10 Reported AE for Reports with&quot;, target_drug_name))</code></pre>
-<p><img src="test-drug-report_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
-<pre class="r"><code>qList$count = &quot;patient.drug.medicinalproduct.exact&quot;
-qList$limit = 20
-countPlot(getResults(qList), &quot;Reported Name&quot;, &quot;Report Counts by Harmonized Generic Name&quot;)</code></pre>
-<p><img src="test-drug-report_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
-<section id="gather-all-reports-for-the-target-drug-or-download-a-quarter-of-data-for-analysis-testing" class="level2">
-<h2>Gather All Reports For the Target Drug or Download a Quarter of Data for Analysis Testing</h2>
-<pre class="r"><code>qList$count = NULL
-qList$limit = 100
-q = createQuery(qList)
-initialQuery = getResults(q, excludeMeta = FALSE)
-
-#Get total number of recordsfrom metadata
-total_results = initialQuery$meta$results$total
-
-# Get all records if more than 100 total (TODO: should check if mutliple connections are possible and run in parallel or use source code to change limits)
-# if(total_results &gt; nrow(initialQuery$results)){
-#   totalIterations = floor(total_results/100)
-#   fullList = lapply(paste0(q, &quot;&amp;skip=&quot;, 100*(0:totalIterations)), getResults) # first 100 is redundant with initial query, should update in future
-# }
-# 
-# fullList2 = unlist(fullList, recursive=FALSE)
-# 
-# length(fullList[[3]])</code></pre>
-<section id="bulk-or-multi-query-processing" class="level3">
-<h3>BULK OR MULTI QUERY PROCESSING</h3>
+<section id="astrazeneca-openfda-case-study" class="level1">
+<h1>AstraZeneca-openFDA-Case-Study</h1>
+<section id="overview" class="level2">
+<h2>Overview</h2>
+<p>The files in this repository were developed as part of an interview with AstraZeneca Oncology Machine Learning &amp; AI. The general ask was to explore the drug adverse event reporting data available via the FDA’s openFDA Adverse Event Reporting System (FAERS) API at <a href="https://open.fda.gov/drug/event/" class="uri">https://open.fda.gov/drug/event/</a>.</p>
+<p>For ease of use I’ve created several rmarkdown files for the case study and have deployed them on a github.io site for viewing. The site can be accessed here <strong><a href="https://bmanry13.github.io/AstraZeneca-openFDA-Case-Study/index.html" class="uri">https://bmanry13.github.io/AstraZeneca-openFDA-Case-Study/index.html</a></strong>. The notebooks contain API calls for accessing the data directly from FDA so can be run locally with a cloned repository.</p>
+<p>The site pages include:</p>
+<ul>
+<li><p><strong><a href="https://bmanry13.github.io/AstraZeneca-openFDA-Case-Study/index.html">Documentation Review</a>:</strong> A documentation review/overview of the openFDA FAERS data and API. This section is a qualitative look at how the event data is collected, what the reports contain, and some general observations that I had related to the limitations or potential biases to consider when using the data.</p></li>
+<li><p><strong><a href="https://bmanry13.github.io/AstraZeneca-openFDA-Case-Study/Initial-Data-Exploration.html">Initial Data Exploration</a>:</strong> In this section I wanted to get a feel for how the various API syntax options operate, how/what data is returned by the API, and explore distibutions of values present in the data for select fields like reporter type, country, and event type.</p></li>
+<li><p><strong><a href="https://bmanry13.github.io/AstraZeneca-openFDA-Case-Study/Feasability-Testing.html">Feasability Testing</a>:</strong> In this section I explored the feasability of interacting with the openFDA data more advanced ways (e.g., downloading reaction reports beyond the maximum limit of 100)</p></li>
+</ul>
 </section>
+<section id="r-packages-used-in-analysis" class="level2">
+<h2>R Packages Used in Analysis</h2>
+<ul>
+<li>ggplot2: <a href="https://github.com/hadley/ggplot2" class="uri">https://github.com/hadley/ggplot2</a></li>
+<li>jsonlite: <a href="https://github.com/jeroen/jsonlite" class="uri">https://github.com/jeroen/jsonlite</a></li>
+<li>dplyr: <a href="https://github.com/tidyverse/dplyr" class="uri">https://github.com/tidyverse/dplyr</a></li>
+<li>tidyr: <a href="https://github.com/tidyverse/tidyr" class="uri">https://github.com/tidyverse/tidyr</a></li>
+<li>rmarkdown: <a href="https://github.com/rstudio/rmarkdown" class="uri">https://github.com/rstudio/rmarkdown</a></li>
+<li>knitr: <a href="https://github.com/yihui/knitr" class="uri">https://github.com/yihui/knitr</a></li>
+<li>kableExtra: <a href="https://github.com/haozhu233/kableExtra" class="uri">https://github.com/haozhu233/kableExtra</a></li>
+</ul>
 </section>
-<section id="gather-all-reports-for-the-target-drug-or-download-a-quarter-of-data-for-analysis-testing-1" class="level2">
-<h2>Gather All Reports For the Target Drug or Download a Quarter of Data for Analysis Testing</h2>
 </section>
 
 
