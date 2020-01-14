@@ -89,7 +89,7 @@ nrow(fullList) == total_results
 ```
 
 ```{r}
-head(fullList)
+head(fullList, 1)
 ```
 
 ## Expaned Drug Search Using NDC Dataset
