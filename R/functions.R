@@ -48,11 +48,11 @@ getResults = function(q, excludeMeta = TRUE, verbose = FALSE){
     cat('\n\n')
     cat(q)
   }
-  request = GET(q)
+  response = GET(q)
   #TODO: error handling if status code != 200 e.g, request failed
-  if(request$status_code == 200 & verbose) cat("\n SUCCESS!!!")
-  response = content(request, as = "text")
-  response = jsonlite::fromJSON(response)
+  if(response$status_code == 200 & verbose) cat("\n SUCCESS!!!")
+  response = content(response, as = "text")
+  response = fromJSON(response)
   if(excludeMeta) response = response$results
   return(response)
 }
@@ -89,7 +89,7 @@ mapCategoryValues = function(df, n){
   return(df[grab_names])
 }
 
-countPlot = function(plotData, axis_label, plot_title = NULL, mapCategories = NULL){
+countPlot = function(plotData, axis_label, plot_title = NULL, mapCategories = NULL, returnPlotObject = FALSE){
   #============================================#'
   # Description: Creates a horizontal bar plot for openFDA count query results
   # Inputs: 
@@ -108,5 +108,6 @@ countPlot = function(plotData, axis_label, plot_title = NULL, mapCategories = NU
     xlab(axis_label) +
     coord_flip() 
   if(!is.null(plot_title)) p = p + ggtitle(plot_title)
+  if(returnPlotObject) return(p)
   plot(p)
 }

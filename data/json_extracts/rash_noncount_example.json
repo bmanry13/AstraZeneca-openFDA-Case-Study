@@ -1,0 +1,116 @@
+{
+  "meta": {
+    "disclaimer": "Do not rely on openFDA to make decisions regarding medical care. While we make every effort to ensure that data is accurate, you should assume all results are unvalidated. We may limit or otherwise restrict your access to the API in line with our Terms of Service.",
+    "terms": "https://open.fda.gov/terms/",
+    "license": "https://open.fda.gov/license/",
+    "last_updated": "2019-12-14",
+    "results": {
+      "skip": 0,
+      "limit": 1,
+      "total": 360316
+    }
+  },
+  "results": [
+    {
+      "reporttype": "1",
+      "safetyreportversion": "2",
+      "receivedateformat": "102",
+      "primarysource": {
+        "qualification": "1",
+        "reportercountry": "IT"
+      },
+      "transmissiondateformat": "102",
+      "fulfillexpeditecriteria": "1",
+      "safetyreportid": "10003338",
+      "patient": {
+        "patientonsetage": "34",
+        "reaction": [
+          {
+            "reactionoutcome": "1",
+            "reactionmeddraversionpt": "17.0",
+            "reactionmeddrapt": "Swollen tongue"
+          },
+          {
+            "reactionoutcome": "1",
+            "reactionmeddraversionpt": "17.0",
+            "reactionmeddrapt": "Pruritus"
+          },
+          {
+            "reactionoutcome": "1",
+            "reactionmeddraversionpt": "17.0",
+            "reactionmeddrapt": "Rash generalised"
+          }
+        ],
+        "patientonsetageunit": "801",
+        "patientsex": "2",
+        "drug": [
+          {
+            "drugstartdateformat": "102",
+            "drugindication": "TONSILLITIS",
+            "drugintervaldosageunitnumb": "1",
+            "drugbatchnumb": "UNKNOWN",
+            "drugadministrationroute": "048",
+            "drugstartdate": "20140127",
+            "drugenddateformat": "102",
+            "drugauthorizationnumb": "050662",
+            "drugenddate": "20140128",
+            "drugstructuredosageunit": "003",
+            "medicinalproduct": "KLACID",
+            "drugcharacterization": "1",
+            "drugstructuredosagenumb": "500",
+            "drugintervaldosagedefinition": "804",
+            "drugseparatedosagenumb": "1",
+            "actiondrug": "1"
+          },
+          {
+            "drugstartdateformat": "102",
+            "drugindication": "TONSILLITIS",
+            "drugbatchnumb": "UNKNOWN",
+            "drugadministrationroute": "048",
+            "drugcharacterization": "1",
+            "drugstartdate": "20140125",
+            "drugenddateformat": "102",
+            "drugdosagetext": "DAILY DOSE: 2 GRAM; 875MG/125MG",
+            "drugenddate": "20140128",
+            "actiondrug": "1",
+            "medicinalproduct": "CLAVULIN"
+          },
+          {
+            "drugindication": "PRODUCT USED FOR UNKNOWN INDICATION",
+            "drugadministrationroute": "048",
+            "drugcharacterization": "2",
+            "medicinalproduct": "OKI"
+          },
+          {
+            "drugindication": "PRODUCT USED FOR UNKNOWN INDICATION",
+            "drugadministrationroute": "048",
+            "drugcharacterization": "2",
+            "medicinalproduct": "TACHIPIRINA"
+          }
+        ]
+      },
+      "serious": "1",
+      "reportduplicate": {
+        "duplicatesource": "ABBVIE",
+        "duplicatenumb": "IT-ABBVIE-14P-083-1210488-00"
+      },
+      "receiptdate": "20140428",
+      "receiptdateformat": "102",
+      "receiver": {
+        "receivertype": "6",
+        "receiverorganization": "FDA"
+      },
+      "companynumb": "IT-ABBVIE-14P-083-1210488-00",
+      "occurcountry": "IT",
+      "duplicate": "1",
+      "sender": {
+        "senderorganization": "FDA-Public Use",
+        "sendertype": "2"
+      },
+      "receivedate": "20140312",
+      "seriousnesshospitalization": "1",
+      "transmissiondate": "20141212",
+      "primarysourcecountry": "IT"
+    }
+  ]
+}

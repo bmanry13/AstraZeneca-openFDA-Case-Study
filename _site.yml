@@ -4,8 +4,10 @@ navbar:
   left:
     - text: "Documentation Review"
       href: index.html
-    - text: "Inital Data Exploration"
-      href: Inital-Data-Exploration.html
+    - text: "Initial Data Exploration"
+      href: Initial-Data-Exploration.html
+    - text: "Case Study"
+      href: test-drug-report.html
 output:
   html_document:
     smart: false
