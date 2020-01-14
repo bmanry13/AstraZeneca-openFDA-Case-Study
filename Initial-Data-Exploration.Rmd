@@ -1,5 +1,5 @@
 ---
-title: "Inital Data Exploration"
+title: "Initial Data Exploration"
 ---
 ## R Packages used in this analysis
 ```{r, message=FALSE}
@@ -14,24 +14,24 @@ library(kableExtra)
 
 # High-Level Data Exploration
 
-The goal of this inital data exploration is multifaceted. With it, I hope to gain a better understanding of:
+The goal of this Initial data exploration is multifaceted. With it, I hope to gain a better understanding of:
 
 * The openFDA API syntax and how the options interact to influence query responses;
 * the structure of response API JSON objects, what fields they contain, and how to process them;
 * the availability and distribution of fields withing the data;
-* and, the limitations or aparent biases within the data which could impact future analyses.
+* and, the limitations or apparent biases within the data which could impact future analyses.
 
-These insights will not only help with the selection and deveopment of the Case Study for this interview, but will also allow me to better articulate how this data could be extended and utilized in future more-robust products and analyses.
+These insights will not only help with the selection and development of the Case Study for this interview, but will also allow me to better articulate how this data could be extended and utilized in future more-robust products and analyses.
 
-To force myself to work more directly with the API syntax and response JSON data, I have chosen not to use the  [rOpenHealth](https://github.com/rOpenHealth/openfda) openFDA package for this inital exploration analysis.
+To force myself to work more directly with the API syntax and response JSON data, I have chosen not to use the  [rOpenHealth](https://github.com/rOpenHealth/openfda) openFDA package for this Initial exploration analysis.
 
 ----
 
 ## Testing openFDA Syntax and basic response JSON structure
 
-Based on the [Inital Documentation Review]() we know there are two types of query options count and non-count. Count queries will return a table with count of the number of unique values of a selected field for the records which match the search (this is limited to a max of 1000 values). The alternative is the non-count query which returns an array of records which match the search criteria (limited to 100 records). 
+Based on the [Initial Documentation Review]() we know there are two types of query options count and non-count. Count queries will return a table with count of the number of unique values of a selected field for the records which match the search (this is limited to a max of 1000 values). The alternative is the non-count query which returns an array of records which match the search criteria (limited to 100 records). 
 
-The code below downloads an example of each type using the same search criteria and can be found in the repository [here](https://github.com/bmanry13/AstraZeneca-openFDA-Case-Study/tree/master/data/json_extracts). In this inital code I've also included each step explicit step required to capture a response using the [httr package](https://github.com/r-lib/httr)
+The code below downloads an example of each type using the same search criteria and can be found in the repository [here](https://github.com/bmanry13/AstraZeneca-openFDA-Case-Study/tree/master/data/json_extracts). In this Initial code I've also included each step explicit step required to capture a response using the [httr package](https://github.com/r-lib/httr)
 
 
 ```{r}
@@ -63,7 +63,7 @@ rash_count_list = fromJSON(rash_count_response_text)
 
 Looking at the structure of the two files can be can be accessed here: [Rash Count Response](https://github.com/bmanry13/AstraZeneca-openFDA-Case-Study/tree/master/data/json_extracts/rash_count_example.json) and [Rash Records Response](https://github.com/bmanry13/AstraZeneca-openFDA-Case-Study/tree/master/data/json_extracts/rash_noncount_example.json). 
 
-As you can see there are quite a few steps requered to query the API, so I created a few simple functions to help streamline the query processes (and other functionality used in this inital analysis like plots). The code for the functions can be found [here](https://github.com/bmanry13/AstraZeneca-openFDA-Case-Study/blob/master/R/functions.R)
+As you can see there are quite a few steps required to query the API, so I created a few simple functions to help streamline the query processes (and other functionality used in this Initial analysis like plots). The code for the functions can be found [here](https://github.com/bmanry13/AstraZeneca-openFDA-Case-Study/blob/master/R/functions.R)
 
 ```{r, echo=FALSE}
 source("./R/functions.R")
@@ -71,7 +71,7 @@ source("./R/functions.R")
 
 **Response Meta Data**
 
-Both response types include the same disclaimer, terms, license, and last updated date information. However, the non-count response provides additional more-useful information, specifically results$total which provides the total number of records which matched the search regardless of how many were retrune based on the set limit. 
+Both response types include the same disclaimer, terms, license, and last updated date information. However, the non-count response provides additional more-useful information, specifically results$total which provides the total number of records which matched the search regardless of how many were returned based on the set limit. 
 
 This information is useful not only to see how many records match the search, but also in situations when we want to download all of the records for a given search, but the total number exceeds the max limit of 100. Using the total records count we could set up function to iteratively query 100 records at a time (potentially in parallel) up to the total using the "skip" syntax parameter. In this case we can see that there are **`r rash_list$meta$results$total` records** which would require a minimum of **`r ceiling(rash_list$meta$results$total / 100)` individual query calls**
 
@@ -86,18 +86,24 @@ print(rash_list$meta)
 ```
 
 **Count Response Data**
-When a count query is successful the retuned JSON provides a results table with two fields "term" and "count". The "term" field contains the unique values associted with the count parameter field used in the query url. In this rash example we're we used "patient.reaction.reactionmeddrapt" which are standard MedDRA terms. 
 
-*Note: Since we did not include .exact at the end of the count parameter the counts will be for individual words within MedDRA terms*. So for example, if a record had a reaction vale "hot rash", it would be included based on our search (since the value includes "rash") and the count table would have a row for both "hot" and "rash" individually. The default limit for a count query is 100, so this count results table will have 100 rows for the terms with the 100 highest record counts. 
+When a count query is successful the retuned JSON provides a results table with two fields "term" and "count". The "term" field contains the unique values associated with the count parameter field used in the query url. In this rash example we're we used "patient.reaction.reactionmeddrapt" which are standard MedDRA terms. 
 
-*Note: there is no way to "skip" when using count records so if a count field has more than 1,000 values (the maximum for a count query) there would be no way to easily retreive the full table past the top 1,000 counts*
+*Note: Since we did not include .exact at the end of the count parameter the counts will be for individual words within MedDRA terms*. So, for example, if a record had a reaction vale "hot rash", it would be included based on our search (since the value includes "rash") and the count table would have a row for both "hot" and "rash" individually. The default limit for a count query is 100, so this count results table will have 100 rows for the terms with the 100 highest record counts. 
+
+*Note: there is no way to "skip" when using count records so if a count field has more than 1,000 values (the maximum for a count query) there would be no way to easily retrieve the full table past the top 1,000 counts*
+
+
 
 *Top Reaction Terms Appearing Along with Rash*
 ```{r}
 kable(rash_count_list$results, format = "html", row.names = FALSE) %>% kable_styling() %>% scroll_box(width = "100%", height = "300px")
 ```
 
+
+
 *Example Count Table Plot*
+
 ```{r}
 ggplot(rash_count_list$results[2:21, ], aes(reorder(term, count), count)) +
   geom_bar(stat = "Identity") +
@@ -109,9 +115,9 @@ ggplot(rash_count_list$results[2:21, ], aes(reorder(term, count), count)) +
 
 **Exact Whole Phrases vs. Individual Terms**
 
-Looking at the top terms retured by the "patient.reaction.reactionmeddrapt" field include words which are not infomative like "site" or "decreased". To help account for this openFDA allows for some fields to be searched and/or counted based on the full value not the individual words using the .exact suffix. *Note: using .exact could be helpful in some search or count situations, however terms could be missed or undercounted due spelling or punctuation issues in some fields and should be used with some caution.*  
+Looking at the top terms retured by the "patient.reaction.reactionmeddrapt" field include words which are not informative like "site" or "decreased". To help account for this openFDA allows for some fields to be searched and/or counted based on the full value not the individual words using the .exact suffix. *Note: using .exact could be helpful in some search or count situations, however terms could be missed or undercounted due spelling or punctuation issues in some fields and should be used with some caution.*  
 
-Below I've runt he top-20 full reactions term counts for our original rash search to show the difference between counts with and without .exact. In this situation the list is much more informative than the prior count results.
+Below I've run the top-20 full reactions term counts for our original rash search to show the difference between counts with and without .exact. In this situation the list is much more informative than the prior count results.
 
 *Top-20 Full Reaction Terms Appearing with Rash*
 ```{r}
@@ -121,9 +127,11 @@ countPlot(getResults(qList)[2:21, ], "Full Reaction Term", "Top-20 Full Reaction
 
 ```
 
-##Exploring the Full Universe of Records Present in FAERS
+----
 
-Using the information gathered in the previous section we can begin to explore the universe records available in FAERS to get a better picture of how the data might be used (or not used because of limitations with query sytax functionality). Knowing what the distrubution of key fields in the data look like will help navigate potential biases or limitations, while testing more-complex search terms will help determine how data should be queried based on it's intended use.
+## Exploring the Full Universe of Records Present in FAERS
+
+Using the information gathered in the previous section we can begin to explore the universe records available in FAERS to get a better picture of how the data might be used (or not used because of limitations with query syntax functionality). Knowing what the distribution of key fields in the data look like will help navigate potential biases or limitations, while testing more-complex search terms will help determine how data should be queried based on its intended use.
 
 
 **Top Reported Reaction Events**
@@ -137,9 +145,11 @@ qList = list(
 countPlot(getResults(qList), "Adverse Event Type", "Top-20 Reported Adverse Events FAERS")
 ```
 
+
+
 **Reporter Type**
 
-Looking at the type of individual submitting the event report we can see that nearly half of all reaction reports are submitted by non-health professional consumers. This is important information for future refence since it is possible (and probably likely) that health professionals will report different reactions at different rates. For example health professional will probably have a higher relative proportion of severe adverse events (SAE) compared to consumers (something we will examine later). These differences may need to be considered when creating search criteria.
+Looking at the type of individual submitting the event report we can see that nearly half of all reaction reports are submitted by non-health professional consumers. This is important information for future refence since it is possible (and probably likely) that health professionals will report different reactions at different rates. For example, health professional will probably have a higher relative proportion of severe adverse events (SAE) compared to consumers (something we will examine later). These differences may need to be considered when creating search criteria.
 
 ```{r}
 qList$count = "primarysource.qualification"
@@ -150,9 +160,11 @@ countPlot(reporter_type_count, "Reporter Type", "Report Counts by Reporter Type"
   scale_y_continuous(labels = function(x) paste0(x*100, "%"))
 ```
 
+
+
 **Report Location**
 
-Similar to reporter type, it will likely be important to know where reports are coming from. Not only could countries have different relative rates of reporting, but some fields in the reports (e.g., medical product) can be free text entry which may be impacted differently in non-english speaking countries. The figure below shows, unsurprisingly, that the vast majority of the reports in FAERS come from the USA. Further examinations of both the types of recations reported and the type of individual doing the reporting will also likely vary between the US and other countries.
+Similar to reporter type, it will likely be important to know where reports are coming from. Not only could countries have different relative rates of reporting, but some fields in the reports (e.g., medical product) can be free text entry which may be impacted differently in non-English speaking countries. The figure below shows, unsurprisingly, that the vast majority of the reports in FAERS come from the USA. Further examinations of both the types of reactions reported and the type of individual doing the reporting will also likely vary between the US and other countries.
 
 ```{r}
 qList$count = "occurcountry.exact"
@@ -161,7 +173,7 @@ countPlot(getResults(qList), "Country", "Report Counts by Country of Occurance")
 
 ## Exploring AE Reporting
 
-Reaction reporting sevarity could be a valuable search/count field available in the reporting data. Serious events are likely more reliably reported (especially by health professionals). In this section I'll explore the rates at which reports are labled "seious" (e.g., death, hospitalization, etc.) or not, and how the rates reported could vary by factors like reporter type and country.
+Reaction reporting severity could be a valuable search/count field available in the reporting data. Serious events are likely more reliably reported (especially by health professionals). In this section I'll explore the rates at which reports are labeled "serious" (e.g., death, hospitalization, etc.) or not, and how the rates reported could vary by factors like reporter type and country.
 
 ### Counts of Reports containing an AE and SAE
 ```{r}
@@ -207,33 +219,33 @@ aeComparePlot = function(aeCompData, xLabText, stat_type = "count"){
   return(p)
 }
 
-aeComparePlot(compareAE("primarysource.qualification", mapCatValues = TRUE), "Reporter Type") + ggtitle("Sevarity by Country") + coord_flip()
+aeComparePlot(compareAE("primarysource.qualification", mapCatValues = TRUE), "Reporter Type") + ggtitle("Severity by Country") + coord_flip()
 ```
 
-*Sevarity by Country*
+*Severity by Country*
 
 ```{r}
-aeComparePlot(compareAE("occurcountry.exact"), "Country") + ggtitle("Sevarity by Country")
-
-```
-
-```{r}
-aeComparePlot(compareAE("occurcountry.exact"), "Country", stat_type = "percent") + ggtitle("Sevarity by Country")
+aeComparePlot(compareAE("occurcountry.exact"), "Country") + ggtitle("Severity by Country")
 
 ```
 
+```{r}
+aeComparePlot(compareAE("occurcountry.exact"), "Country", stat_type = "percent") + ggtitle("Severity by Country")
+
+```
+
 
 ```{r}
-aeComparePlot(compareAE("occurcountry.exact"), "Country") + ggtitle("Sevarity by Country")
+aeComparePlot(compareAE("occurcountry.exact"), "Country") + ggtitle("Severity by Country")
 
 ```
 
 
 ## Exploring Drug Names Within Reports
 
-Another important piece of the openFDA data to explore is how drug names are presented in the data. Based on the inital document review, drug names are provided both in their raw form as provided by the person creating the report, and "harmoized" brand and generic names added by the FDA. Harmonizing adds additional RxNorm information for drug products with exact matches. *Note: only products with exact matches will be harmonized so searching the harmonized fields will not search all reports; additionally, this missingness is likely non-random since it is dependent on spelling/punctuation*
+Another important piece of the openFDA data to explore is how drug names are presented in the data. Based on the initial document review, drug names are provided both in their raw form as provided by the person creating the report, and "harmonized" brand and generic names added by the FDA. Harmonizing adds additional RxNorm information for drug products with exact matches. *Note: only products with exact matches will be harmonized so searching the harmonized fields will not search all reports; additionally, this missingness is likely non-random since it is dependent on spelling/punctuation*
 
-The figure below shows the top-20 "generic" drug names included in reports. It is clear from these results that even for the "harmonized" gerneric drug names, there still appear to be some duplicates and/or overlap when using the .exact suffix. See asprin for example, it is included in the list multiple times with varying doses. It may also be possible that some of the counts are redundant (e.g., a single drug's harmonized data may have asprin and asprin 81 MG listed within the same drug). Careful consideration will need to be take when querying drug name data. Things like spelling, use of exact, and combination drugs all need to be considered.
+The figure below shows the top-20 "generic" drug names included in reports. It is clear from these results that even for the "harmonized" generic drug names, there still appear to be some duplicates and/or overlap when using the .exact suffix. See aspirin for example, it is included in the list multiple times with varying doses. It may also be possible that some of the counts are redundant (e.g., a single drug's harmonized data may have aspirin and aspirin 81 MG listed within the same drug). Careful consideration will need to be take when querying drug name data. Things like spelling, use of exact, and combination drugs all need to be considered.
 
 *Top Harmonized Generic Drug Names Included in Reports*
 ```{r}
@@ -284,13 +296,14 @@ write(content(GET(createQuery(list(search = 'patient.drug.medicinalproduct:"METF
 
 ```
 
+---
 
-##CONCLUSION
+## CONCLUSION
 
-###LIMITATIONS
+### LIMITATIONS
 
-###USE CASES
+### USE CASES
 
-###NEXT STEPS
+### NEXT STEPS
 
 

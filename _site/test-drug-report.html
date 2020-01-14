@@ -11,7 +11,7 @@
 
 
 
-<title>Single Drug Report (test)</title>
+<title>Case Study - Single Drug Report (test)</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -179,7 +179,10 @@ $(document).ready(function () {
   <a href="index.html">Documentation Review</a>
 </li>
 <li>
-  <a href="Inital-Data-Exploration.html">Inital Data Exploration</a>
+  <a href="Initial-Data-Exploration.html">Initial Data Exploration</a>
+</li>
+<li>
+  <a href="test-drug-report.html">Case Study</a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -193,7 +196,7 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">Single Drug Report (test)</h1>
+<h1 class="title toc-ignore">Case Study - Single Drug Report (test)</h1>
 
 </div>
 
@@ -330,24 +333,32 @@ countPlot(getResults(qList), &quot;Adverse Event Type&quot;, paste(&quot;Top-10 
 qList$limit = 20
 countPlot(getResults(qList), &quot;Reported Name&quot;, &quot;Report Counts by Harmonized Generic Name&quot;)</code></pre>
 <p><img src="test-drug-report_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
-<p>Gather All Reports For the Target Drug</p>
+<section id="gather-all-reports-for-the-target-drug-or-download-a-quarter-of-data-for-analysis-testing" class="level2">
+<h2>Gather All Reports For the Target Drug or Download a Quarter of Data for Analysis Testing</h2>
 <pre class="r"><code>qList$count = NULL
 qList$limit = 100
 q = createQuery(qList)
-initalQuery = getResults(q, excludeMeta = FALSE)
+initialQuery = getResults(q, excludeMeta = FALSE)
 
 #Get total number of recordsfrom metadata
-total_results = initalQuery$meta$results$total
+total_results = initialQuery$meta$results$total
 
 # Get all records if more than 100 total (TODO: should check if mutliple connections are possible and run in parallel or use source code to change limits)
-# if(total_results &gt; nrow(initalQuery$results)){
+# if(total_results &gt; nrow(initialQuery$results)){
 #   totalIterations = floor(total_results/100)
-#   fullList = lapply(paste0(q, &quot;&amp;skip=&quot;, 100*(0:totalIterations)), getResults) # first 100 is redundant with inital query, should update in future
+#   fullList = lapply(paste0(q, &quot;&amp;skip=&quot;, 100*(0:totalIterations)), getResults) # first 100 is redundant with initial query, should update in future
 # }
 # 
 # fullList2 = unlist(fullList, recursive=FALSE)
 # 
 # length(fullList[[3]])</code></pre>
+<section id="bulk-or-multi-query-processing" class="level3">
+<h3>BULK OR MULTI QUERY PROCESSING</h3>
+</section>
+</section>
+<section id="gather-all-reports-for-the-target-drug-or-download-a-quarter-of-data-for-analysis-testing-1" class="level2">
+<h2>Gather All Reports For the Target Drug or Download a Quarter of Data for Analysis Testing</h2>
+</section>
 
 
 

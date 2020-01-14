@@ -1,0 +1,1376 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title>Initial Data Exploration</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/journal.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-1.1/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-1.1/highlight.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 61px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+
+.section h2 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+.section h3 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+.section h4 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+.section h5 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+.section h6 {
+  padding-top: 66px;
+  margin-top: -66px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">openFDA Explore</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Documentation Review</a>
+</li>
+<li>
+  <a href="Initial-Data-Exploration.html">Initial Data Exploration</a>
+</li>
+<li>
+  <a href="test-drug-report.html">Case Study</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Initial Data Exploration</h1>
+
+</div>
+
+
+<section id="r-packages-used-in-this-analysis" class="level2">
+<h2>R Packages used in this analysis</h2>
+<pre class="r"><code>library(httr)
+library(jsonlite)
+library(dplyr)
+library(tidyr)
+library(knitr)
+library(kableExtra)</code></pre>
+</section>
+<section id="high-level-data-exploration" class="level1">
+<h1>High-Level Data Exploration</h1>
+<p>The goal of this Initial data exploration is multifaceted. With it, I hope to gain a better understanding of:</p>
+<ul>
+<li>The openFDA API syntax and how the options interact to influence query responses;</li>
+<li>the structure of response API JSON objects, what fields they contain, and how to process them;</li>
+<li>the availability and distribution of fields withing the data;</li>
+<li>and, the limitations or apparent biases within the data which could impact future analyses.</li>
+</ul>
+<p>These insights will not only help with the selection and development of the Case Study for this interview, but will also allow me to better articulate how this data could be extended and utilized in future more-robust products and analyses.</p>
+<p>To force myself to work more directly with the API syntax and response JSON data, I have chosen not to use the <a href="https://github.com/rOpenHealth/openfda">rOpenHealth</a> openFDA package for this Initial exploration analysis.</p>
+<hr />
+<section id="testing-openfda-syntax-and-basic-response-json-structure" class="level2">
+<h2>Testing openFDA Syntax and basic response JSON structure</h2>
+<p>Based on the <a href="">Initial Documentation Review</a> we know there are two types of query options count and non-count. Count queries will return a table with count of the number of unique values of a selected field for the records which match the search (this is limited to a max of 1000 values). The alternative is the non-count query which returns an array of records which match the search criteria (limited to 100 records).</p>
+<p>The code below downloads an example of each type using the same search criteria and can be found in the repository <a href="https://github.com/bmanry13/AstraZeneca-openFDA-Case-Study/tree/master/data/json_extracts">here</a>. In this Initial code I’ve also included each step explicit step required to capture a response using the <a href="https://github.com/r-lib/httr">httr package</a></p>
+<pre class="r"><code>library(httr)
+library(jsonlite)
+
+#=== NON-COUNT QUERY EXAMPLE ===#
+#- Let&#39;s find all records which mention a rash reaction
+# 1) Define the query url
+url = &#39;https://api.fda.gov/drug/event.json?search=patient.reaction.reactionmeddrapt:&quot;rash&quot;&#39;
+#- 2) Set get request to openFDA API and capture response
+rash_response = GET(url)
+#- 3) Convert response() object to text object (this will be the standard JSON formatted text)
+rash_response_text = content(rash_response, as = &quot;text&quot;)
+#- 4) (Optional) Can save text copy of JSON
+write(rash_response_text, &quot;./data/json_extracts/rash_noncount_example.json&quot;)
+#- 5) Convert text object to nested list using jsonlite
+rash_list = fromJSON(rash_response_text)
+
+#=== COUNT QUERY EXAMPLE ===#
+#- Using the count option we can use the same seacg to get a count of reactions which accompanty rash reactions
+url = paste(url, &quot;count=patient.reaction.reactionmeddrapt&quot;, sep = &quot;&amp;&quot;)
+rash_count_response = GET(url)
+rash_count_response_text = content(rash_count_response, as = &quot;text&quot;)
+write(rash_count_response_text, &quot;./data/json_extracts/rash_count_example.json&quot;)
+rash_count_list = fromJSON(rash_count_response_text)</code></pre>
+<p>Looking at the structure of the two files can be can be accessed here: <a href="https://github.com/bmanry13/AstraZeneca-openFDA-Case-Study/tree/master/data/json_extracts/rash_count_example.json">Rash Count Response</a> and <a href="https://github.com/bmanry13/AstraZeneca-openFDA-Case-Study/tree/master/data/json_extracts/rash_noncount_example.json">Rash Records Response</a>.</p>
+<p>As you can see there are quite a few steps required to query the API, so I created a few simple functions to help streamline the query processes (and other functionality used in this Initial analysis like plots). The code for the functions can be found <a href="https://github.com/bmanry13/AstraZeneca-openFDA-Case-Study/blob/master/R/functions.R">here</a></p>
+<p><strong>Response Meta Data</strong></p>
+<p>Both response types include the same disclaimer, terms, license, and last updated date information. However, the non-count response provides additional more-useful information, specifically results$total which provides the total number of records which matched the search regardless of how many were returned based on the set limit.</p>
+<p>This information is useful not only to see how many records match the search, but also in situations when we want to download all of the records for a given search, but the total number exceeds the max limit of 100. Using the total records count we could set up function to iteratively query 100 records at a time (potentially in parallel) up to the total using the “skip” syntax parameter. In this case we can see that there are <strong>360316 records</strong> which would require a minimum of <strong>3604 individual query calls</strong></p>
+<p><em>Count Response Metadata</em></p>
+<pre class="r"><code>print(rash_count_list$meta)</code></pre>
+<pre><code>## $disclaimer
+## [1] &quot;Do not rely on openFDA to make decisions regarding medical care. While we make every effort to ensure that data is accurate, you should assume all results are unvalidated. We may limit or otherwise restrict your access to the API in line with our Terms of Service.&quot;
+## 
+## $terms
+## [1] &quot;https://open.fda.gov/terms/&quot;
+## 
+## $license
+## [1] &quot;https://open.fda.gov/license/&quot;
+## 
+## $last_updated
+## [1] &quot;2019-12-14&quot;</code></pre>
+<p><em>Non-Count Response Metadata</em></p>
+<pre class="r"><code>print(rash_list$meta)</code></pre>
+<pre><code>## $disclaimer
+## [1] &quot;Do not rely on openFDA to make decisions regarding medical care. While we make every effort to ensure that data is accurate, you should assume all results are unvalidated. We may limit or otherwise restrict your access to the API in line with our Terms of Service.&quot;
+## 
+## $terms
+## [1] &quot;https://open.fda.gov/terms/&quot;
+## 
+## $license
+## [1] &quot;https://open.fda.gov/license/&quot;
+## 
+## $last_updated
+## [1] &quot;2019-12-14&quot;
+## 
+## $results
+## $results$skip
+## [1] 0
+## 
+## $results$limit
+## [1] 1
+## 
+## $results$total
+## [1] 360316</code></pre>
+<p><strong>Count Response Data</strong></p>
+<p>When a count query is successful the retuned JSON provides a results table with two fields “term” and “count”. The “term” field contains the unique values associated with the count parameter field used in the query url. In this rash example we’re we used “patient.reaction.reactionmeddrapt” which are standard MedDRA terms.</p>
+<p><em>Note: Since we did not include .exact at the end of the count parameter the counts will be for individual words within MedDRA terms</em>. So, for example, if a record had a reaction vale “hot rash”, it would be included based on our search (since the value includes “rash”) and the count table would have a row for both “hot” and “rash” individually. The default limit for a count query is 100, so this count results table will have 100 rows for the terms with the 100 highest record counts.</p>
+<p><em>Note: there is no way to “skip” when using count records so if a count field has more than 1,000 values (the maximum for a count query) there would be no way to easily retrieve the full table past the top 1,000 counts</em></p>
+<p><em>Top Reaction Terms Appearing Along with Rash</em></p>
+<pre class="r"><code>kable(rash_count_list$results, format = &quot;html&quot;, row.names = FALSE) %&gt;% kable_styling() %&gt;% scroll_box(width = &quot;100%&quot;, height = &quot;300px&quot;)</code></pre>
+<div style="border: 1px solid #ddd; padding: 5px; overflow-y: scroll; height:300px; overflow-x: scroll; width:100%; ">
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+term
+</th>
+<th style="text-align:right;">
+count
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+rash
+</td>
+<td style="text-align:right;">
+360316
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+pruritus
+</td>
+<td style="text-align:right;">
+64230
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+pain
+</td>
+<td style="text-align:right;">
+56492
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+skin
+</td>
+<td style="text-align:right;">
+47123
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+drug
+</td>
+<td style="text-align:right;">
+44434
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+site
+</td>
+<td style="text-align:right;">
+39333
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+erythema
+</td>
+<td style="text-align:right;">
+37060
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+swelling
+</td>
+<td style="text-align:right;">
+33383
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+generalised
+</td>
+<td style="text-align:right;">
+32932
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+decreased
+</td>
+<td style="text-align:right;">
+32465
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+increased
+</td>
+<td style="text-align:right;">
+30478
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+pruritic
+</td>
+<td style="text-align:right;">
+29531
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+disorder
+</td>
+<td style="text-align:right;">
+27756
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+papular
+</td>
+<td style="text-align:right;">
+26430
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+hypersensitivity
+</td>
+<td style="text-align:right;">
+25162
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+injection
+</td>
+<td style="text-align:right;">
+25100
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+fatigue
+</td>
+<td style="text-align:right;">
+24771
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+blood
+</td>
+<td style="text-align:right;">
+24765
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+erythematous
+</td>
+<td style="text-align:right;">
+23571
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+nausea
+</td>
+<td style="text-align:right;">
+23435
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+pyrexia
+</td>
+<td style="text-align:right;">
+23020
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+diarrhoea
+</td>
+<td style="text-align:right;">
+21767
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+urticaria
+</td>
+<td style="text-align:right;">
+20975
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+infection
+</td>
+<td style="text-align:right;">
+20605
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+oedema
+</td>
+<td style="text-align:right;">
+20421
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+dyspnoea
+</td>
+<td style="text-align:right;">
+20053
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+headache
+</td>
+<td style="text-align:right;">
+18962
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+reaction
+</td>
+<td style="text-align:right;">
+18187
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+macular
+</td>
+<td style="text-align:right;">
+18022
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+in
+</td>
+<td style="text-align:right;">
+16843
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+abdominal
+</td>
+<td style="text-align:right;">
+16646
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+abnormal
+</td>
+<td style="text-align:right;">
+16615
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+product
+</td>
+<td style="text-align:right;">
+16444
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+peripheral
+</td>
+<td style="text-align:right;">
+16411
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+of
+</td>
+<td style="text-align:right;">
+15415
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+dry
+</td>
+<td style="text-align:right;">
+15197
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+arthralgia
+</td>
+<td style="text-align:right;">
+13878
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+vomiting
+</td>
+<td style="text-align:right;">
+13403
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+discomfort
+</td>
+<td style="text-align:right;">
+13332
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+sensation
+</td>
+<td style="text-align:right;">
+12889
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+weight
+</td>
+<td style="text-align:right;">
+12762
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ineffective
+</td>
+<td style="text-align:right;">
+12524
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+dizziness
+</td>
+<td style="text-align:right;">
+12428
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+burning
+</td>
+<td style="text-align:right;">
+12150
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+maculo
+</td>
+<td style="text-align:right;">
+12014
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+application
+</td>
+<td style="text-align:right;">
+11847
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+malaise
+</td>
+<td style="text-align:right;">
+11157
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+asthenia
+</td>
+<td style="text-align:right;">
+11129
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+syndrome
+</td>
+<td style="text-align:right;">
+10927
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+exfoliation
+</td>
+<td style="text-align:right;">
+10888
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+count
+</td>
+<td style="text-align:right;">
+10551
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+face
+</td>
+<td style="text-align:right;">
+10354
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+use
+</td>
+<td style="text-align:right;">
+10350
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+feeling
+</td>
+<td style="text-align:right;">
+10227
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+eye
+</td>
+<td style="text-align:right;">
+10000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+extremity
+</td>
+<td style="text-align:right;">
+9691
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+cough
+</td>
+<td style="text-align:right;">
+9559
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+blister
+</td>
+<td style="text-align:right;">
+9218
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+haemorrhage
+</td>
+<td style="text-align:right;">
+9182
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+chest
+</td>
+<td style="text-align:right;">
+9141
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+disease
+</td>
+<td style="text-align:right;">
+9110
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+insomnia
+</td>
+<td style="text-align:right;">
+9038
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+appetite
+</td>
+<td style="text-align:right;">
+8884
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+cell
+</td>
+<td style="text-align:right;">
+8773
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+failure
+</td>
+<td style="text-align:right;">
+8693
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+dermatitis
+</td>
+<td style="text-align:right;">
+8557
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+irritation
+</td>
+<td style="text-align:right;">
+7974
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+upper
+</td>
+<td style="text-align:right;">
+7861
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+eosinophilia
+</td>
+<td style="text-align:right;">
+7798
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+respiratory
+</td>
+<td style="text-align:right;">
+7693
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+anaemia
+</td>
+<td style="text-align:right;">
+7596
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+issue
+</td>
+<td style="text-align:right;">
+7464
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+tract
+</td>
+<td style="text-align:right;">
+7443
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+muscle
+</td>
+<td style="text-align:right;">
+7366
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+systemic
+</td>
+<td style="text-align:right;">
+7346
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+back
+</td>
+<td style="text-align:right;">
+7330
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+pressure
+</td>
+<td style="text-align:right;">
+7091
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+renal
+</td>
+<td style="text-align:right;">
+7038
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+joint
+</td>
+<td style="text-align:right;">
+6957
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+alopecia
+</td>
+<td style="text-align:right;">
+6955
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+oral
+</td>
+<td style="text-align:right;">
+6949
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+paraesthesia
+</td>
+<td style="text-align:right;">
+6824
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+injury
+</td>
+<td style="text-align:right;">
+6694
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+impairment
+</td>
+<td style="text-align:right;">
+6678
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+myalgia
+</td>
+<td style="text-align:right;">
+6484
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+label
+</td>
+<td style="text-align:right;">
+6454
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+off
+</td>
+<td style="text-align:right;">
+6374
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+constipation
+</td>
+<td style="text-align:right;">
+6158
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+mouth
+</td>
+<td style="text-align:right;">
+6142
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+musculoskeletal
+</td>
+<td style="text-align:right;">
+6021
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+hepatic
+</td>
+<td style="text-align:right;">
+5960
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+disturbance
+</td>
+<td style="text-align:right;">
+5925
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+with
+</td>
+<td style="text-align:right;">
+5921
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+pustular
+</td>
+<td style="text-align:right;">
+5917
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+anxiety
+</td>
+<td style="text-align:right;">
+5894
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+chills
+</td>
+<td style="text-align:right;">
+5867
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+acne
+</td>
+<td style="text-align:right;">
+5838
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+discolouration
+</td>
+<td style="text-align:right;">
+5779
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+flushing
+</td>
+<td style="text-align:right;">
+5723
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+depression
+</td>
+<td style="text-align:right;">
+5689
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><em>Example Count Table Plot</em></p>
+<pre class="r"><code>ggplot(rash_count_list$results[2:21, ], aes(reorder(term, count), count)) +
+  geom_bar(stat = &quot;Identity&quot;) +
+  xlab(&quot;Reaction Term&quot;) +
+  ylab(&quot;Record Count&quot;) +
+  ggtitle(&quot;Top-20 Reaction Terms Appearing Along with Rash&quot;) +
+  coord_flip() </code></pre>
+<p><img src="Initial-Data-Exploration_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<p><strong>Exact Whole Phrases vs. Individual Terms</strong></p>
+<p>Looking at the top terms retured by the “patient.reaction.reactionmeddrapt” field include words which are not informative like “site” or “decreased”. To help account for this openFDA allows for some fields to be searched and/or counted based on the full value not the individual words using the .exact suffix. <em>Note: using .exact could be helpful in some search or count situations, however terms could be missed or undercounted due spelling or punctuation issues in some fields and should be used with some caution.</em></p>
+<p>Below I’ve run the top-20 full reactions term counts for our original rash search to show the difference between counts with and without .exact. In this situation the list is much more informative than the prior count results.</p>
+<p><em>Top-20 Full Reaction Terms Appearing with Rash</em></p>
+<pre class="r"><code>qList = list(search = &#39;patient.reaction.reactionmeddrapt:&quot;rash&quot;&#39;, 
+             count = &#39;patient.reaction.reactionmeddrapt.exact&#39;)
+countPlot(getResults(qList)[2:21, ], &quot;Full Reaction Term&quot;, &quot;Top-20 Full Reaction Terms Appearing with Rash&quot;)</code></pre>
+<p><img src="Initial-Data-Exploration_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<hr />
+</section>
+<section id="exploring-the-full-universe-of-records-present-in-faers" class="level2">
+<h2>Exploring the Full Universe of Records Present in FAERS</h2>
+<p>Using the information gathered in the previous section we can begin to explore the universe records available in FAERS to get a better picture of how the data might be used (or not used because of limitations with query syntax functionality). Knowing what the distribution of key fields in the data look like will help navigate potential biases or limitations, while testing more-complex search terms will help determine how data should be queried based on its intended use.</p>
+<p><strong>Top Reported Reaction Events</strong></p>
+<p>It only makes sense that the first distribution we look at in the adverse reaction data are the top adverse reactions.</p>
+<pre class="r"><code>qList = list(
+  &quot;count&quot; = &quot;patient.reaction.reactionmeddrapt.exact&quot;, 
+  &quot;limit&quot; = 20)
+countPlot(getResults(qList), &quot;Adverse Event Type&quot;, &quot;Top-20 Reported Adverse Events FAERS&quot;)</code></pre>
+<p><img src="Initial-Data-Exploration_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<p><strong>Reporter Type</strong></p>
+<p>Looking at the type of individual submitting the event report we can see that nearly half of all reaction reports are submitted by non-health professional consumers. This is important information for future refence since it is possible (and probably likely) that health professionals will report different reactions at different rates. For example, health professional will probably have a higher relative proportion of severe adverse events (SAE) compared to consumers (something we will examine later). These differences may need to be considered when creating search criteria.</p>
+<pre class="r"><code>qList$count = &quot;primarysource.qualification&quot;
+reporter_type_count = getResults(qList)
+total_records = sum(reporter_type_count$count)
+reporter_type_count$count = reporter_type_count$count / total_records
+countPlot(reporter_type_count, &quot;Reporter Type&quot;, &quot;Report Counts by Reporter Type&quot;, mapCategories = &quot;primarysource.qualification&quot;, returnPlotObject = TRUE) +
+  scale_y_continuous(labels = function(x) paste0(x*100, &quot;%&quot;))</code></pre>
+<p><img src="Initial-Data-Exploration_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<p><strong>Report Location</strong></p>
+<p>Similar to reporter type, it will likely be important to know where reports are coming from. Not only could countries have different relative rates of reporting, but some fields in the reports (e.g., medical product) can be free text entry which may be impacted differently in non-English speaking countries. The figure below shows, unsurprisingly, that the vast majority of the reports in FAERS come from the USA. Further examinations of both the types of reactions reported and the type of individual doing the reporting will also likely vary between the US and other countries.</p>
+<pre class="r"><code>qList$count = &quot;occurcountry.exact&quot;
+countPlot(getResults(qList), &quot;Country&quot;, &quot;Report Counts by Country of Occurance&quot;)</code></pre>
+<p><img src="Initial-Data-Exploration_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+</section>
+<section id="exploring-ae-reporting" class="level2">
+<h2>Exploring AE Reporting</h2>
+<p>Reaction reporting severity could be a valuable search/count field available in the reporting data. Serious events are likely more reliably reported (especially by health professionals). In this section I’ll explore the rates at which reports are labeled “serious” (e.g., death, hospitalization, etc.) or not, and how the rates reported could vary by factors like reporter type and country.</p>
+<section id="counts-of-reports-containing-an-ae-and-sae" class="level3">
+<h3>Counts of Reports containing an AE and SAE</h3>
+<pre class="r"><code>qList$count = &quot;serious&quot;
+mapCategoryValues(getResults(qList), qList$count) %&gt;% mutate(percent = format((count / sum(count))*100, digits = 4, nsmall = 0)) %&gt;% 
+  kable(.) %&gt;% kable_styling()</code></pre>
+<pre><code>## Currently generic markdown table using pandoc is not supported.</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: left;">term</th>
+<th style="text-align: right;">count</th>
+<th style="text-align: left;">percent</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">SAE</td>
+<td style="text-align: right;">6453837</td>
+<td style="text-align: left;">57.77</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">AE</td>
+<td style="text-align: right;">4717374</td>
+<td style="text-align: left;">42.23</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="sae-and-ae-reporting-rates-by-reporter-type" class="level3">
+<h3>SAE and AE Reporting Rates by Reporter Type</h3>
+<pre class="r"><code>compareAE = function(count_group, mapCatValues = FALSE, limit = 10){
+  qList = list(count = count_group, limit = 1000)
+  count_table = getResults(qList)
+  # ADD SAE COUNTS
+  qList$search = &quot;serious:1&quot;
+  count_table = merge(count_table, getResults(qList), by = &quot;term&quot;)
+  names(count_table)[2:3] = c(&quot;total_reports&quot;, &quot;SAE&quot;)
+  count_table$SAE_PCT = count_table$SAE / count_table$total_reports
+  # ADD AE COUNTS
+  qList$search = &quot;serious:2&quot;
+  count_table = merge(count_table, getResults(qList), by = &quot;term&quot;)
+  names(count_table)[5] = &quot;AE&quot;
+  count_table$AE_PCT = count_table$AE / count_table$total_reports
+  # JUST CONFIRMING THAT SAE AND AE REPORT COUNTS ARE MUTUALLY EXCLUSIVE
+  count_table$net_pct = count_table$AE_PCT + count_table$SAE_PCT
+  if(mapCatValues) count_table = mapCategoryValues(count_table, qList$count)
+  count_table = count_table[order(-count_table$total_reports), ]
+  
+  return(count_table[1:min(nrow(count_table), limit), ])
+}
+
+aeComparePlot = function(aeCompData, xLabText, stat_type = &quot;count&quot;){
+  plotData = aeCompData
+  if(stat_type == &quot;percent&quot;){
+    plotData = select(plotData, term, SAE_PCT, AE_PCT)
+    names(plotData)[2:3] = c(&quot;SAE&quot;, &quot;AE&quot;)
+  } 
+  plotData = select(plotData, term, SAE, AE) %&gt;% gather(key = Event_Type, value = yVar, -term)
+  p = ggplot(plotData, aes(reorder(term, yVar), yVar, fill = Event_Type)) +
+    geom_bar(stat = &quot;identity&quot;) +
+    xlab(xLabText) +
+    ylab(stat_type)
+  return(p)
+}
+
+aeComparePlot(compareAE(&quot;primarysource.qualification&quot;, mapCatValues = TRUE), &quot;Reporter Type&quot;) + ggtitle(&quot;Severity by Country&quot;) + coord_flip()</code></pre>
+<p><img src="Initial-Data-Exploration_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
+<p><em>Severity by Country</em></p>
+<pre class="r"><code>aeComparePlot(compareAE(&quot;occurcountry.exact&quot;), &quot;Country&quot;) + ggtitle(&quot;Severity by Country&quot;)</code></pre>
+<p><img src="Initial-Data-Exploration_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
+<pre class="r"><code>aeComparePlot(compareAE(&quot;occurcountry.exact&quot;), &quot;Country&quot;, stat_type = &quot;percent&quot;) + ggtitle(&quot;Severity by Country&quot;)</code></pre>
+<p><img src="Initial-Data-Exploration_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
+<pre class="r"><code>aeComparePlot(compareAE(&quot;occurcountry.exact&quot;), &quot;Country&quot;) + ggtitle(&quot;Severity by Country&quot;)</code></pre>
+<p><img src="Initial-Data-Exploration_files/figure-html/unnamed-chunk-16-1.png" width="672" /></p>
+</section>
+</section>
+<section id="exploring-drug-names-within-reports" class="level2">
+<h2>Exploring Drug Names Within Reports</h2>
+<p>Another important piece of the openFDA data to explore is how drug names are presented in the data. Based on the initial document review, drug names are provided both in their raw form as provided by the person creating the report, and “harmonized” brand and generic names added by the FDA. Harmonizing adds additional RxNorm information for drug products with exact matches. <em>Note: only products with exact matches will be harmonized so searching the harmonized fields will not search all reports; additionally, this missingness is likely non-random since it is dependent on spelling/punctuation</em></p>
+<p>The figure below shows the top-20 “generic” drug names included in reports. It is clear from these results that even for the “harmonized” generic drug names, there still appear to be some duplicates and/or overlap when using the .exact suffix. See aspirin for example, it is included in the list multiple times with varying doses. It may also be possible that some of the counts are redundant (e.g., a single drug’s harmonized data may have aspirin and aspirin 81 MG listed within the same drug). Careful consideration will need to be take when querying drug name data. Things like spelling, use of exact, and combination drugs all need to be considered.</p>
+<p><em>Top Harmonized Generic Drug Names Included in Reports</em></p>
+<pre class="r"><code>qList = list(count = &#39;patient.drug.openfda.generic_name.exact&#39;,
+             limit = 20)
+countPlot(getResults(qList), &quot;Generic Name&quot;, &quot;Report Counts by Harmonized Generic Name&quot;)</code></pre>
+<p><img src="Initial-Data-Exploration_files/figure-html/unnamed-chunk-17-1.png" width="672" /></p>
+<p>In contrast to the harmonized, the individual word counts for the raw reported drug names do not fully align with the harmonized generic name list. This is likely and indicator of a mix of brand and generic names used in the raw product reporting.</p>
+<p><em>Top Raw Reported Product Individual Terms</em></p>
+<pre class="r"><code>qList$count = &quot;patient.drug.medicinalproduct&quot;
+qList$limit = 20
+countPlot(getResults(qList), &quot;Reported Name&quot;, &quot;Report Counts by Reported Name&quot;)</code></pre>
+<p><img src="Initial-Data-Exploration_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
+<p>Interestingly, when using the .exact syntax with the raw names two drugs (Humira, Enbrel) have significantly higher record counts compared all of the other drugs in the list.</p>
+<pre class="r"><code>qList$count = &quot;patient.drug.medicinalproduct.exact&quot;
+qList$limit = 20
+countPlot(getResults(qList), &quot;Generic Name&quot;, &quot;Report Counts by Reported Name&quot;)</code></pre>
+<p><img src="Initial-Data-Exploration_files/figure-html/unnamed-chunk-19-1.png" width="672" /></p>
+<pre class="r"><code>qList$search = &quot;patient.drug.medicinalproduct:METFORMIN&quot;
+qList$count = &quot;patient.drug.medicinalproduct.exact&quot;
+qList$limit = 1000 #counts are limited to 1000 results
+raw_met_count = getResults(qList)
+raw_met_count = raw_met_count[grepl(&quot;METFORMIN&quot;, raw_met_count$term), ]
+names(raw_met_count)[2] = &quot;raw_count&quot;
+kable(raw_met_count, row.names = FALSE) %&gt;% kable_styling()</code></pre>
+<pre><code>## Currently generic markdown table using pandoc is not supported.</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: left;">term</th>
+<th style="text-align: right;">raw_count</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">METFORMIN</td>
+<td style="text-align: right;">161718</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">METFORMIN HCL</td>
+<td style="text-align: right;">54484</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">METFORMIN HYDROCHLORIDE.</td>
+<td style="text-align: right;">12863</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">METFORMIN HYDROCHLORIDE</td>
+<td style="text-align: right;">6814</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">METFORMIN (METFORMIN)</td>
+<td style="text-align: right;">1737</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">METFORMIN ER</td>
+<td style="text-align: right;">616</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">METFORMIN (UNKNOWN)</td>
+<td style="text-align: right;">507</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">GLYBURIDE AND METFORMIN HCL</td>
+<td style="text-align: right;">470</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">GLUCOPHAGE /USA/ (METFORMIN HYDROCHLORIDE)</td>
+<td style="text-align: right;">351</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">METFORMIN HYDROCHLORIDE ER</td>
+<td style="text-align: right;">339</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">GLYBURIDE/METFORMIN</td>
+<td style="text-align: right;">300</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>qList$search = &quot;patient.drug.openfda.generic_name:METFORMIN&quot;
+qList$count = &quot;patient.drug.medicinalproduct.exact&quot;
+qList$limit = 1000
+generic_met_count = getResults(qList)
+generic_met_count[grepl(&quot;METFORMIN&quot;, generic_met_count$term), ]</code></pre>
+<pre><code>##                           term  count
+## 1                    METFORMIN 161718
+## 2                METFORMIN HCL  54484
+## 16    METFORMIN HYDROCHLORIDE.  12863
+## 44     METFORMIN HYDROCHLORIDE   6814
+## 870 METFORMIN HYDROCHLORIDE ER    339</code></pre>
+<pre class="r"><code>write(content(GET(createQuery(list(search = &#39;patient.drug.medicinalproduct:&quot;METFORMIN+(UNKNOWN)&quot;&#39;))), as = &quot;text&quot;), file = &quot;./data/json_extracts/METFORMIN_UNKNOWN_example.json&quot;)</code></pre>
+<hr />
+</section>
+<section id="conclusion" class="level2">
+<h2>CONCLUSION</h2>
+<section id="limitations" class="level3">
+<h3>LIMITATIONS</h3>
+</section>
+<section id="use-cases" class="level3">
+<h3>USE CASES</h3>
+</section>
+<section id="next-steps" class="level3">
+<h3>NEXT STEPS</h3>
+</section>
+</section>
+</section>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

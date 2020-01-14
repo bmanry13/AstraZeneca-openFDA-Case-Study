@@ -1,0 +1,410 @@
+{
+  "meta": {
+    "disclaimer": "Do not rely on openFDA to make decisions regarding medical care. While we make every effort to ensure that data is accurate, you should assume all results are unvalidated. We may limit or otherwise restrict your access to the API in line with our Terms of Service.",
+    "terms": "https://open.fda.gov/terms/",
+    "license": "https://open.fda.gov/license/",
+    "last_updated": "2019-12-14"
+  },
+  "results": [
+    {
+      "term": "rash",
+      "count": 360316
+    },
+    {
+      "term": "pruritus",
+      "count": 64230
+    },
+    {
+      "term": "pain",
+      "count": 56492
+    },
+    {
+      "term": "skin",
+      "count": 47123
+    },
+    {
+      "term": "drug",
+      "count": 44434
+    },
+    {
+      "term": "site",
+      "count": 39333
+    },
+    {
+      "term": "erythema",
+      "count": 37060
+    },
+    {
+      "term": "swelling",
+      "count": 33383
+    },
+    {
+      "term": "generalised",
+      "count": 32932
+    },
+    {
+      "term": "decreased",
+      "count": 32465
+    },
+    {
+      "term": "increased",
+      "count": 30478
+    },
+    {
+      "term": "pruritic",
+      "count": 29531
+    },
+    {
+      "term": "disorder",
+      "count": 27756
+    },
+    {
+      "term": "papular",
+      "count": 26430
+    },
+    {
+      "term": "hypersensitivity",
+      "count": 25162
+    },
+    {
+      "term": "injection",
+      "count": 25100
+    },
+    {
+      "term": "fatigue",
+      "count": 24771
+    },
+    {
+      "term": "blood",
+      "count": 24765
+    },
+    {
+      "term": "erythematous",
+      "count": 23571
+    },
+    {
+      "term": "nausea",
+      "count": 23435
+    },
+    {
+      "term": "pyrexia",
+      "count": 23020
+    },
+    {
+      "term": "diarrhoea",
+      "count": 21767
+    },
+    {
+      "term": "urticaria",
+      "count": 20975
+    },
+    {
+      "term": "infection",
+      "count": 20605
+    },
+    {
+      "term": "oedema",
+      "count": 20421
+    },
+    {
+      "term": "dyspnoea",
+      "count": 20053
+    },
+    {
+      "term": "headache",
+      "count": 18962
+    },
+    {
+      "term": "reaction",
+      "count": 18187
+    },
+    {
+      "term": "macular",
+      "count": 18022
+    },
+    {
+      "term": "in",
+      "count": 16843
+    },
+    {
+      "term": "abdominal",
+      "count": 16646
+    },
+    {
+      "term": "abnormal",
+      "count": 16615
+    },
+    {
+      "term": "product",
+      "count": 16444
+    },
+    {
+      "term": "peripheral",
+      "count": 16411
+    },
+    {
+      "term": "of",
+      "count": 15415
+    },
+    {
+      "term": "dry",
+      "count": 15197
+    },
+    {
+      "term": "arthralgia",
+      "count": 13878
+    },
+    {
+      "term": "vomiting",
+      "count": 13403
+    },
+    {
+      "term": "discomfort",
+      "count": 13332
+    },
+    {
+      "term": "sensation",
+      "count": 12889
+    },
+    {
+      "term": "weight",
+      "count": 12762
+    },
+    {
+      "term": "ineffective",
+      "count": 12524
+    },
+    {
+      "term": "dizziness",
+      "count": 12428
+    },
+    {
+      "term": "burning",
+      "count": 12150
+    },
+    {
+      "term": "maculo",
+      "count": 12014
+    },
+    {
+      "term": "application",
+      "count": 11847
+    },
+    {
+      "term": "malaise",
+      "count": 11157
+    },
+    {
+      "term": "asthenia",
+      "count": 11129
+    },
+    {
+      "term": "syndrome",
+      "count": 10927
+    },
+    {
+      "term": "exfoliation",
+      "count": 10888
+    },
+    {
+      "term": "count",
+      "count": 10551
+    },
+    {
+      "term": "face",
+      "count": 10354
+    },
+    {
+      "term": "use",
+      "count": 10350
+    },
+    {
+      "term": "feeling",
+      "count": 10227
+    },
+    {
+      "term": "eye",
+      "count": 10000
+    },
+    {
+      "term": "extremity",
+      "count": 9691
+    },
+    {
+      "term": "cough",
+      "count": 9559
+    },
+    {
+      "term": "blister",
+      "count": 9218
+    },
+    {
+      "term": "haemorrhage",
+      "count": 9182
+    },
+    {
+      "term": "chest",
+      "count": 9141
+    },
+    {
+      "term": "disease",
+      "count": 9110
+    },
+    {
+      "term": "insomnia",
+      "count": 9038
+    },
+    {
+      "term": "appetite",
+      "count": 8884
+    },
+    {
+      "term": "cell",
+      "count": 8773
+    },
+    {
+      "term": "failure",
+      "count": 8693
+    },
+    {
+      "term": "dermatitis",
+      "count": 8557
+    },
+    {
+      "term": "irritation",
+      "count": 7974
+    },
+    {
+      "term": "upper",
+      "count": 7861
+    },
+    {
+      "term": "eosinophilia",
+      "count": 7798
+    },
+    {
+      "term": "respiratory",
+      "count": 7693
+    },
+    {
+      "term": "anaemia",
+      "count": 7596
+    },
+    {
+      "term": "issue",
+      "count": 7464
+    },
+    {
+      "term": "tract",
+      "count": 7443
+    },
+    {
+      "term": "muscle",
+      "count": 7366
+    },
+    {
+      "term": "systemic",
+      "count": 7346
+    },
+    {
+      "term": "back",
+      "count": 7330
+    },
+    {
+      "term": "pressure",
+      "count": 7091
+    },
+    {
+      "term": "renal",
+      "count": 7038
+    },
+    {
+      "term": "joint",
+      "count": 6957
+    },
+    {
+      "term": "alopecia",
+      "count": 6955
+    },
+    {
+      "term": "oral",
+      "count": 6949
+    },
+    {
+      "term": "paraesthesia",
+      "count": 6824
+    },
+    {
+      "term": "injury",
+      "count": 6694
+    },
+    {
+      "term": "impairment",
+      "count": 6678
+    },
+    {
+      "term": "myalgia",
+      "count": 6484
+    },
+    {
+      "term": "label",
+      "count": 6454
+    },
+    {
+      "term": "off",
+      "count": 6374
+    },
+    {
+      "term": "constipation",
+      "count": 6158
+    },
+    {
+      "term": "mouth",
+      "count": 6142
+    },
+    {
+      "term": "musculoskeletal",
+      "count": 6021
+    },
+    {
+      "term": "hepatic",
+      "count": 5960
+    },
+    {
+      "term": "disturbance",
+      "count": 5925
+    },
+    {
+      "term": "with",
+      "count": 5921
+    },
+    {
+      "term": "pustular",
+      "count": 5917
+    },
+    {
+      "term": "anxiety",
+      "count": 5894
+    },
+    {
+      "term": "chills",
+      "count": 5867
+    },
+    {
+      "term": "acne",
+      "count": 5838
+    },
+    {
+      "term": "discolouration",
+      "count": 5779
+    },
+    {
+      "term": "flushing",
+      "count": 5723
+    },
+    {
+      "term": "depression",
+      "count": 5689
+    }
+  ]
+}

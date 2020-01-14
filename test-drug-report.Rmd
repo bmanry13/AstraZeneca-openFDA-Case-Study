@@ -1,5 +1,5 @@
 ---
-title: "Single Drug Report (test)"
+title: "Case Study - Single Drug Report (test)"
 output: html_document
 ---
 ```{r, echo=FALSE}
@@ -60,20 +60,20 @@ countPlot(getResults(qList), "Reported Name", "Report Counts by Harmonized Gener
 ```
 
 
-Gather All Reports For the Target Drug
+## Gather All Reports For the Target Drug or Download a Quarter of Data for Analysis Testing 
 ```{r}
 qList$count = NULL
 qList$limit = 100
 q = createQuery(qList)
-initalQuery = getResults(q, excludeMeta = FALSE)
+initialQuery = getResults(q, excludeMeta = FALSE)
 
 #Get total number of recordsfrom metadata
-total_results = initalQuery$meta$results$total
+total_results = initialQuery$meta$results$total
 
 # Get all records if more than 100 total (TODO: should check if mutliple connections are possible and run in parallel or use source code to change limits)
-# if(total_results > nrow(initalQuery$results)){
+# if(total_results > nrow(initialQuery$results)){
 #   totalIterations = floor(total_results/100)
-#   fullList = lapply(paste0(q, "&skip=", 100*(0:totalIterations)), getResults) # first 100 is redundant with inital query, should update in future
+#   fullList = lapply(paste0(q, "&skip=", 100*(0:totalIterations)), getResults) # first 100 is redundant with initial query, should update in future
 # }
 # 
 # fullList2 = unlist(fullList, recursive=FALSE)
@@ -81,6 +81,13 @@ total_results = initalQuery$meta$results$total
 # length(fullList[[3]])
 
 ```
+
+
+### BULK OR MULTI QUERY PROCESSING
+## Gather All Reports For the Target Drug or Download a Quarter of Data for Analysis Testing 
+
+
+
 
 
 
