@@ -11,7 +11,7 @@ library(jsonlite)
 library(ggplot2)
 
 # ========= FUNCTIONS =========#
-createQuery = function(queryItemList, rootURL = 'https://api.fda.gov/drug/event.json?'){
+createQuery = function(queryItemList, rootURL = 'https://api.fda.gov/drug/event.json?api_key=umOJyfx1udGdQjn1XtT1XGasUjSbgiDIvsJ47jiB&'){
   #============================================#'
   # Description:creates a query string using named elements in a list
   # Inputs: queryItemList: Named list of query items available for openFDA
