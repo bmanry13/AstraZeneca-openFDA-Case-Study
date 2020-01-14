@@ -1332,15 +1332,13 @@ generic_met_count[grepl(&quot;METFORMIN&quot;, generic_met_count$term), ]</code>
 </section>
 <section id="conclusion" class="level2">
 <h2>CONCLUSION</h2>
-<section id="limitations" class="level3">
-<h3>LIMITATIONS</h3>
-</section>
-<section id="use-cases" class="level3">
-<h3>USE CASES</h3>
-</section>
-<section id="next-steps" class="level3">
-<h3>NEXT STEPS</h3>
-</section>
+<p>There is a massive amount of data available via FAERS and other openFDA datasets. With all that data comes the potential for interesting analyses like relative reporting ratios of reactions, reporting pattern monitoring, or for developing endpoints/fields for use with other data sources. <strong>However</strong> there are some significant limitations with the data which cannot be ignored. We’ve observed multiple in this initial exploration alone:</p>
+<ul>
+<li>Biases in types of reactions reported by reporter type and country;</li>
+<li>Spelling issues with source medication names</li>
+<li>Limited API query search options</li>
+</ul>
+<p>Just to name a few, and it is likely that the number will only increase more fields and use cases are explored. To maximize the utility of the data, and to build a more robust product, a dedicated processing pipeline would likely be necessary. Full datasets could be downloaded quarterly when they are released and then run rough a pipeline which could help mitigate some of the known issues like spelling and enhance/combine the processed data as necessary depending on the use case.</p>
 </section>
 </section>
 
